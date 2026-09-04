@@ -50,6 +50,27 @@ const I18N = {
   }
 };
 
+function cleanTrackTitle(rawTitle) {
+  if (!rawTitle) return 'Untitled Track';
+  let title = rawTitle
+    .replace(/\.[^/.]+$/, '') // remove extension if any
+    .replace(/\(online-audio-converter\.com\)/gi, '')
+    .replace(/\(audio-joiner\.com\)/gi, '')
+    .replace(/\(320kbps\)/gi, '')
+    .replace(/\(128kbps\)/gi, '')
+    .replace(/\(256kbps\)/gi, '')
+    .replace(/\(mp3\)/gi, '')
+    .replace(/\(wav\)/gi, '')
+    .replace(/\[\s*(official\s*(audio|video|music\s*video|lyric\s*video|mv)?)\s*\]/gi, '')
+    .replace(/\(\s*(official\s*(audio|video|music\s*video|lyric\s*video|mv)?)\s*\)/gi, '')
+    .replace(/\[\s*(audio|video|lyrics|hd|4k|hq|remix|full\s*album)\s*\]/gi, '')
+    .replace(/\(\s*(audio|video|lyrics|hd|4k|hq|remix|full\s*album)\s*\)/gi, '')
+    .replace(/_{1,}/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return title || 'Untitled Track';
+}
+
 class AppController {
   constructor() {
     this.currentLang = 'kh';
@@ -271,17 +292,36 @@ class AppController {
     const modal = document.getElementById('editTrackModal');
     if (!modal) return;
 
-    document.getElementById('editTrackTitle').value = track.title || '';
-    document.getElementById('editTrackArtist').value = track.artist || '';
-    document.getElementById('editTrackAlbum').value = track.album || '';
+    const titleInput = document.getElementById('editTrackTitle');
+    const artistInput = document.getElementById('editTrackArtist');
+    const albumInput = document.getElementById('editTrackAlbum');
+    const lyricsInput = document.getElementById('editTrackLyrics');
+    const coverPreview = document.getElementById('editTrackCoverPreview');
+    const coverInput = document.getElementById('editTrackCoverInput');
+    const applyAllCoverCheckbox = document.getElementById('editApplyCoverToAllCheckbox');
+
+    if (titleInput) titleInput.value = track.title || '';
+    if (artistInput) artistInput.value = track.artist || '';
+    if (albumInput) albumInput.value = track.album || '';
+    if (coverPreview) coverPreview.src = track.coverUrl || 'assets/bct_music_logo.jpg';
+    if (applyAllCoverCheckbox) applyAllCoverCheckbox.checked = false;
     
     const lyricsText = track.lyrics ? track.lyrics.map(l => `[${l.time}] ${l.text}`).join('\n') : '';
-    document.getElementById('editTrackLyrics').value = lyricsText;
+    if (lyricsInput) lyricsInput.value = lyricsText;
 
     modal.classList.add('open');
 
+    // Clean tags button
+    const cleanBtn = document.getElementById('cleanTitleTagBtn');
+    if (cleanBtn) {
+      cleanBtn.onclick = () => {
+        if (titleInput) {
+          titleInput.value = cleanTrackTitle(titleInput.value);
+        }
+      };
+    }
+
     let uploadedCoverUrl = null;
-    const coverInput = document.getElementById('editTrackCoverInput');
     if (coverInput) {
       coverInput.value = '';
       coverInput.onchange = (e) => {
@@ -290,6 +330,7 @@ class AppController {
           const reader = new FileReader();
           reader.onload = (ev) => {
             uploadedCoverUrl = ev.target.result;
+            if (coverPreview) coverPreview.src = uploadedCoverUrl;
           };
           reader.readAsDataURL(file);
         }
@@ -297,29 +338,60 @@ class AppController {
     }
 
     const saveBtn = document.getElementById('saveTrackEditBtn');
-    saveBtn.onclick = () => {
-      track.title = document.getElementById('editTrackTitle').value;
-      track.artist = document.getElementById('editTrackArtist').value;
-      track.album = document.getElementById('editTrackAlbum').value;
-      if (uploadedCoverUrl) {
-        track.coverUrl = uploadedCoverUrl;
-      }
+    if (saveBtn) {
+      saveBtn.onclick = () => {
+        const newTitle = titleInput ? titleInput.value.trim() : track.title;
+        const newArtist = artistInput ? artistInput.value.trim() : track.artist;
+        const newAlbum = albumInput ? albumInput.value.trim() : track.album;
 
-      const rawLyrics = document.getElementById('editTrackLyrics').value.split('\n');
-      track.lyrics = [];
-      rawLyrics.forEach(line => {
-        const match = line.match(/\[(\d+)\]\s*(.*)/);
-        if (match) {
-          track.lyrics.push({ time: parseInt(match[1], 10), text: match[2] });
-        } else if (line.trim().length > 0) {
-          track.lyrics.push({ time: 0, text: line.trim() });
+        track.title = newTitle || 'Untitled Track';
+        track.artist = newArtist || 'Unknown Artist';
+        track.album = newAlbum || '';
+        
+        if (uploadedCoverUrl) {
+          track.coverUrl = uploadedCoverUrl;
+          if (applyAllCoverCheckbox && applyAllCoverCheckbox.checked) {
+            this.audioEngine.playlist.forEach(t => t.coverUrl = uploadedCoverUrl);
+            this.visualizer.setCustomCoverImage(uploadedCoverUrl);
+          }
         }
-      });
 
-      this.visualizer.setTrack(track);
-      this.renderTracklist();
-      this.updateNowPlayingUI(track);
-      modal.classList.remove('open');
+        if (lyricsInput) {
+          const rawLyrics = lyricsInput.value.split('\n');
+          track.lyrics = [];
+          rawLyrics.forEach(line => {
+            const match = line.match(/\[(\d+)\]\s*(.*)/);
+            if (match) {
+              track.lyrics.push({ time: parseInt(match[1], 10), text: match[2] });
+            } else if (line.trim().length > 0) {
+              track.lyrics.push({ time: 0, text: line.trim() });
+            }
+          });
+        }
+
+        // Update in playlist
+        this.audioEngine.playlist[index] = track;
+
+        // If this is currently active track, update visualizer & bottom bar immediately
+        if (this.audioEngine.currentTrackIndex === index) {
+          this.visualizer.setTrack(track);
+          this.updateNowPlayingUI(track);
+        }
+
+        this.renderTracklist();
+        modal.classList.remove('open');
+      };
+    }
+
+    // Close handlers
+    const cancelBtn = document.getElementById('cancelEditModalBtn');
+    if (cancelBtn) cancelBtn.onclick = () => modal.classList.remove('open');
+    const closeBtn = document.getElementById('closeEditModalBtn');
+    if (closeBtn) closeBtn.onclick = () => modal.classList.remove('open');
+
+    // Close on backdrop click
+    modal.onclick = (e) => {
+      if (e.target === modal) modal.classList.remove('open');
     };
   }
 
@@ -584,7 +656,7 @@ class AppController {
     Array.from(files).forEach((file) => {
       if (file.type.startsWith('audio/') || file.name.match(/\.(mp3|wav|ogg|m4a|flac)$/i)) {
         const audioUrl = URL.createObjectURL(file);
-        const trackTitle = file.name.replace(/\.[^/.]+$/, '');
+        const trackTitle = cleanTrackTitle(file.name);
         
         const coverArt = this.visualizer.customCoverSrc || window.demoDataManager.generateCoverArt(trackTitle, 'My Artist', '#1e1b4b', '#4338ca', 'circle');
 

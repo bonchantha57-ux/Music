@@ -766,37 +766,60 @@
     </div>
   </div>
 
-  <!-- Edit Track Metadata Modal (With Track Cover Upload) -->
+  <!-- Edit Track Metadata Modal (With Track Cover Upload & Preview) -->
   <div class="modal-backdrop" id="editTrackModal">
     <div class="modal-dialog">
       <div class="modal-header">
-        <span class="modal-title">✏️ កែសម្រួលព័ត៌មានបទចម្រៀង</span>
+        <span class="modal-title">✏️ កែសម្រួលព័ត៌មានបទចម្រៀង (Edit Track)</span>
         <button class="btn-icon-square" id="closeEditModalBtn">✕</button>
       </div>
       <div class="modal-body">
+        <!-- Cover Art Preview & Upload Row -->
+        <div style="display: flex; gap: 14px; align-items: center; background: rgba(99, 102, 241, 0.1); padding: 12px; border-radius: var(--radius-md); border: 1px solid rgba(99, 102, 241, 0.3);">
+          <img id="editTrackCoverPreview" src="" alt="Cover" style="width: 64px; height: 64px; border-radius: 8px; object-fit: cover; border: 1px solid rgba(255,255,255,0.25); background: #0f172a;" />
+          <div style="flex: 1;">
+            <label class="control-label" style="font-weight: 700; color: #a5b4fc; margin-bottom: 6px;">🖼️ រូបភាព Cover បទនេះ (Track Artwork)</label>
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 6px;">
+              <label for="editTrackCoverInput" class="btn-random-style" style="display: inline-block; cursor: pointer; padding: 6px 12px; font-size: 0.78rem;">
+                📁 ជ្រើសរើសរូបថ្មី...
+              </label>
+              <input type="file" id="editTrackCoverInput" accept="image/*" style="display: none;" />
+            </div>
+            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.76rem; color: #cbd5e1; cursor: pointer;">
+              <input type="checkbox" id="editApplyCoverToAllCheckbox" style="accent-color: #6366f1;" />
+              <span>អនុវត្តរូបនេះលើគ្រប់បទទាំងអស់ (Apply to all tracks)</span>
+            </label>
+          </div>
+        </div>
+
         <div class="control-group">
-          <label class="control-label">ចំណងជើងបទចម្រៀង (Song Title)</label>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <label class="control-label">ចំណងជើងបទចម្រៀង (Song Title)</label>
+            <button type="button" id="cleanTitleTagBtn" style="background: transparent; border: none; color: #38bdf8; font-size: 0.75rem; cursor: pointer; text-decoration: underline;" title="លុបពាក្យ converter/audio/official ចេញ">
+              🧹 សម្អាតឈ្មោះ (Clean Tags)
+            </button>
+          </div>
           <input type="text" class="text-input" id="editTrackTitle" placeholder="ឧទាហរណ៍៖ រាត្រីផ្កាយរះ" />
         </div>
-        <div class="control-group">
-          <label class="control-label">ឈ្មោះតារាចម្រៀង (Artist Name)</label>
-          <input type="text" class="text-input" id="editTrackArtist" placeholder="ឧទាហរណ៍៖ Sinn Sisamouth" />
+
+        <div class="grid-2">
+          <div class="control-group">
+            <label class="control-label">ឈ្មោះតារាចម្រៀង (Artist Name)</label>
+            <input type="text" class="text-input" id="editTrackArtist" placeholder="ឧទាហរណ៍៖ Sinn Sisamouth" />
+          </div>
+          <div class="control-group">
+            <label class="control-label">ឈ្មោះ Album (Album Name)</label>
+            <input type="text" class="text-input" id="editTrackAlbum" placeholder="ឧទាហរណ៍៖ Khmer Classic Vol. 1" />
+          </div>
         </div>
-        <div class="control-group">
-          <label class="control-label">ឈ្មោះ Album (Album Name)</label>
-          <input type="text" class="text-input" id="editTrackAlbum" placeholder="ឧទាហរណ៍៖ Khmer Classic Vol. 1" />
-        </div>
-        <!-- EDIT TRACK COVER IMAGE -->
-        <div class="control-group" style="background: rgba(99, 102, 241, 0.1); padding: 10px; border-radius: var(--radius-sm);">
-          <label class="control-label">🖼️ ប្តូររូបភាព Cover សម្រាប់បទនេះ (Track Cover Image)</label>
-          <input type="file" class="text-input" id="editTrackCoverInput" accept="image/*" />
-        </div>
+
         <div class="control-group">
           <label class="control-label">ទំនុកច្រៀង / Lyrics (ទម្រង់: [វិនាទី] អត្ថបទ)</label>
           <textarea class="textarea-input" id="editTrackLyrics" rows="4" placeholder="[0] ភ្លេងចាប់ផ្តើម...&#10;[5] ទំនុកច្រៀងឃ្លាទីមួយ...&#10;[12] ទំនុកច្រៀងឃ្លាទីពីរ..."></textarea>
         </div>
       </div>
       <div class="modal-footer">
+        <button class="btn-secondary" id="cancelEditModalBtn">បោះបង់ (Cancel)</button>
         <button class="btn-export-primary" id="saveTrackEditBtn">💾 រក្សាទុក (Save Changes)</button>
       </div>
     </div>

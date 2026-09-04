@@ -59,12 +59,18 @@
   -webkit-user-drag: none;
 }
 
+html, body {
+  height: 100vh;
+  max-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
 body {
   font-family: var(--font-main);
   background-color: var(--bg-dark);
   color: var(--text-primary);
-  min-height: 100vh;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   background-image: 
@@ -267,15 +273,17 @@ body {
    MAIN WORKSPACE LAYOUT
    ========================================================================== */
 .app-workspace {
-  flex: 1;
+  flex: 1 1 0;
+  min-height: 0;
   display: flex;
-  height: calc(100vh - var(--header-height) - var(--bottom-bar-height));
   overflow: hidden;
   position: relative;
 }
 
 .stage-container {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
   background: #03060a;
   display: flex;
   flex-direction: column;
@@ -292,6 +300,7 @@ body {
   background: rgba(10, 15, 26, 0.85);
   border-bottom: 1px solid var(--border-glass);
   z-index: 10;
+  flex-shrink: 0;
 }
 
 .aspect-ratio-selector {
@@ -331,11 +340,12 @@ body {
 }
 
 .canvas-wrapper {
-  flex: 1;
+  flex: 1 1 0;
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 14px;
   position: relative;
   overflow: hidden;
   height: 100%;
@@ -350,8 +360,8 @@ body {
 }
 
 #previewCanvas {
-  max-width: 96%;
-  max-height: calc(100vh - var(--header-height) - var(--bottom-bar-height) - 90px);
+  max-width: 98%;
+  max-height: 98%;
   width: auto;
   height: auto;
   border-radius: var(--radius-md);
@@ -1345,9 +1355,9 @@ body {
 /* 1. Large Laptops & Standard Monitors (1366px to 1600px) */
 @media (max-width: 1440px) {
   :root {
-    --sidebar-width: 370px;
+    --sidebar-width: 360px;
     --header-height: 56px;
-    --bottom-bar-height: 70px;
+    --bottom-bar-height: 66px;
   }
 
   .app-header {
@@ -1355,8 +1365,8 @@ body {
   }
 
   .nav-tab-btn {
-    padding: 7px 12px;
-    font-size: 0.8rem;
+    padding: 6px 10px;
+    font-size: 0.78rem;
   }
 
   .app-bottom-bar {
@@ -1369,23 +1379,23 @@ body {
   }
 
   .now-playing-art-wrap {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
   }
 
   .player-main-center {
-    max-width: 520px;
+    max-width: 480px;
   }
 
   .player-extra-controls {
-    flex: 0 1 240px;
+    flex: 0 1 220px;
   }
 }
 
 /* 2. Small Laptops & Tablets Landscape (1025px to 1280px) */
 @media (max-width: 1280px) {
   :root {
-    --sidebar-width: 340px;
+    --sidebar-width: 320px;
   }
 
   .ratio-badge-pill {
@@ -1393,7 +1403,7 @@ body {
   }
 
   .volume-bar-slider {
-    width: 65px;
+    width: 60px;
   }
 
   .player-controls {
@@ -1413,21 +1423,26 @@ body {
 /* 3. Height-Constrained Laptops (Height <= 820px, e.g. 1366x768 or 1440x900) */
 @media (max-height: 820px) {
   :root {
-    --header-height: 52px;
-    --bottom-bar-height: 64px;
+    --header-height: 50px;
+    --bottom-bar-height: 60px;
   }
 
   .app-header {
-    padding: 0 14px;
+    padding: 0 12px;
   }
 
-  .brand-logo-glow {
+  .brand-logo-img {
     width: 34px;
     height: 34px;
   }
 
+  .brand-logo-glow {
+    width: 32px;
+    height: 32px;
+  }
+
   .brand-title {
-    font-size: 1.05rem;
+    font-size: 1rem;
   }
 
   .brand-tag {
@@ -1435,77 +1450,76 @@ body {
   }
 
   .nav-tab-btn {
-    padding: 5px 10px;
-    font-size: 0.76rem;
+    padding: 4px 8px;
+    font-size: 0.74rem;
   }
 
   .studio-card {
-    padding: 12px;
-    gap: 10px;
+    padding: 10px 12px;
+    gap: 8px;
   }
 
   .stage-toolbar {
-    height: 40px;
-    padding: 0 12px;
+    height: 38px;
+    padding: 0 10px;
   }
 
   .now-playing-art-wrap {
-    width: 38px;
-    height: 38px;
-  }
-
-  .player-btn-play {
     width: 36px;
     height: 36px;
   }
 
+  .player-btn-play {
+    width: 34px;
+    height: 34px;
+  }
+
   .player-btn {
-    padding: 4px;
+    padding: 3px;
   }
 
   .app-bottom-bar {
-    padding: 0 14px;
+    padding: 0 12px;
   }
 }
 
 /* 4. Very Low Height Screens (Height <= 700px) */
 @media (max-height: 700px) {
   :root {
-    --header-height: 48px;
-    --bottom-bar-height: 58px;
+    --header-height: 46px;
+    --bottom-bar-height: 54px;
   }
 
   .stage-toolbar {
-    height: 36px;
+    height: 34px;
   }
 
   .studio-tab-nav {
-    gap: 4px;
+    gap: 3px;
   }
 
   .now-playing-meta {
-    max-width: 140px;
+    max-width: 130px;
   }
 }
 
-/* 5. Tablets & Foldables (<= 1024px) */
-@media (max-width: 1024px) {
+/* 5. Tablets & Foldables (<= 960px) */
+@media (max-width: 960px) {
   .app-workspace {
     flex-direction: column;
-    height: auto;
-    overflow: visible;
-  }
-
-  body {
-    overflow-y: auto;
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
   }
 
   .stage-container {
-    height: 480px;
-    min-height: 400px;
+    flex: 0 0 45%;
+    min-height: 200px;
   }
 
   .studio-sidebar {
+    flex: 1 1 0;
+    min-height: 0;
     width: 100%;
     height: auto;
     border-left: none;
@@ -1513,68 +1527,57 @@ body {
   }
 
   .app-bottom-bar {
-    flex-wrap: wrap;
-    height: auto;
-    padding: 12px 16px;
-    gap: 10px;
-    justify-content: center;
+    flex-shrink: 0;
+    height: var(--bottom-bar-height);
+    padding: 0 12px;
   }
 
   .now-playing-box {
-    flex: 1 1 100%;
-    justify-content: center;
-    text-align: center;
-  }
-
-  .player-main-center {
-    flex: 1 1 100%;
-    order: 2;
+    flex: 0 1 160px;
+    min-width: 120px;
   }
 
   .player-extra-controls {
-    flex: 1 1 100%;
-    justify-content: center;
-    order: 3;
+    flex: 0 1 auto;
   }
 }
 
 /* 6. Mobile Devices (<= 640px) */
 @media (max-width: 640px) {
   .app-header {
-    padding: 0 10px;
-    flex-wrap: wrap;
+    padding: 0 8px;
     height: auto;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    gap: 8px;
+    min-height: 46px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    gap: 6px;
   }
 
   .brand-title {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
   }
 
   .studio-tab-nav {
     overflow-x: auto;
     width: 100%;
-    padding-bottom: 4px;
+    padding-bottom: 2px;
   }
 
   .nav-tab-btn {
-    padding: 5px 8px;
-    font-size: 0.72rem;
+    padding: 4px 6px;
+    font-size: 0.70rem;
     white-space: nowrap;
   }
 
   .stage-container {
-    height: 320px;
-    min-height: 300px;
+    flex: 0 0 40%;
+    min-height: 180px;
   }
 
   .stage-toolbar {
-    flex-wrap: wrap;
     height: auto;
-    padding: 6px 10px;
-    gap: 6px;
+    padding: 4px 8px;
+    gap: 4px;
   }
 
   .presets-grid {
@@ -1583,5 +1586,18 @@ body {
 
   .grid-2 {
     grid-template-columns: 1fr;
+  }
+
+  .now-playing-box {
+    display: none;
+  }
+
+  .player-extra-controls {
+    display: none;
+  }
+
+  .player-main-center {
+    width: 100%;
+    max-width: 100%;
   }
 }

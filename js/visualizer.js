@@ -1051,7 +1051,39 @@ class VisualizerEngine {
 
     const titleY = h * (typo.titleY || 0.22);
     const artistY = h * (typo.artistY || 0.30);
-    const textX = typo.alignment === 'left' ? w * 0.1 : (typo.alignment === 'right' ? w * 0.9 : w / 2);
+    const alignment = typo.alignment || 'center';
+    let textX = alignment === 'left' ? w * 0.08 : (alignment === 'right' ? w * 0.92 : w / 2);
+
+    // Calculate intelligent safe maximum width to prevent collision with tracklist overlay & border
+    let calculatedMaxW = w * 0.85;
+    const overlay = this.config.tracklistOverlay;
+    if (overlay && overlay.enabled && overlay.position !== 'none') {
+      const pos = overlay.position || 'left';
+      const boxW = Math.min(440, Math.max(320, w * 0.28));
+      if (pos === 'left') {
+        const leftMargin = 36 + boxW + 30;
+        if (alignment === 'center') {
+          calculatedMaxW = Math.max(280, (w / 2 - leftMargin) * 2);
+        } else if (alignment === 'left') {
+          textX = leftMargin + 10;
+          calculatedMaxW = Math.max(280, w - textX - (w * 0.08));
+        } else {
+          calculatedMaxW = Math.max(280, w - leftMargin - (w * 0.08));
+        }
+      } else if (pos === 'right') {
+        const rightMargin = 36 + boxW + 30;
+        if (alignment === 'center') {
+          calculatedMaxW = Math.max(280, (w / 2 - rightMargin) * 2);
+        } else if (alignment === 'right') {
+          textX = w - rightMargin - 10;
+          calculatedMaxW = Math.max(280, textX - (w * 0.08));
+        } else {
+          calculatedMaxW = Math.max(280, w - rightMargin - (w * 0.08));
+        }
+      } else if (pos === 'top_left') {
+        calculatedMaxW = w * 0.80;
+      }
+    }
 
     window.typographyEngine.renderText(ctx, track.title, textX, titleY, {
       fontFamily: typo.titleFont || 'Outfit',
@@ -1062,8 +1094,8 @@ class VisualizerEngine {
       glowColor: typo.glowColor || '#ec4899',
       strokeWidth: typo.strokeWidth || 0,
       strokeColor: typo.strokeColor || '#000000',
-      alignment: typo.alignment || 'center',
-      maxWidth: w * 0.85
+      alignment: alignment,
+      maxWidth: calculatedMaxW
     });
 
     const artistSubtitle = track.album ? `${track.artist}  •  ${track.album}` : track.artist;
@@ -1074,8 +1106,8 @@ class VisualizerEngine {
       color: typo.artistColor || '#94a3b8',
       style: 'soft_shadow',
       glowColor: typo.glowColor || '#6366f1',
-      alignment: typo.alignment || 'center',
-      maxWidth: w * 0.85
+      alignment: alignment,
+      maxWidth: calculatedMaxW
     });
 
     if (typo.showTrackNumber && window.audioEngine) {

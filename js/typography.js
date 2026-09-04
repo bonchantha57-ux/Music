@@ -58,15 +58,15 @@ class TypographyEngine {
       case 'gold':
         // Luxury metallic gold gradient
         const textMetrics = ctx.measureText(text);
-        const textWidth = textMetrics.width;
+        const actualW = maxWidth ? Math.min(textMetrics.width, maxWidth) : textMetrics.width;
         let startX = x;
-        if (alignment === 'center') startX = x - textWidth / 2;
-        else if (alignment === 'right') startX = x - textWidth;
+        if (alignment === 'center') startX = x - actualW / 2;
+        else if (alignment === 'right') startX = x - actualW;
 
-        const goldGrad = ctx.createLinearGradient(startX, y - fontSize / 2, startX, y + fontSize / 2);
+        const goldGrad = ctx.createLinearGradient(startX, y - fontSize / 2, startX + actualW, y + fontSize / 2);
         goldGrad.addColorStop(0, '#fef08a');
-        goldGrad.addColorStop(0.3, '#f59e0b');
-        goldGrad.addColorStop(0.6, '#fbbf24');
+        goldGrad.addColorStop(0.25, '#f59e0b');
+        goldGrad.addColorStop(0.55, '#fbbf24');
         goldGrad.addColorStop(1, '#b45309');
 
         ctx.shadowColor = 'rgba(245, 158, 11, 0.6)';
@@ -84,7 +84,7 @@ class TypographyEngine {
 
       case 'chrome':
         // Metallic Silver Reflection
-        const chromeGrad = ctx.createLinearGradient(0, y - fontSize / 2, 0, y + fontSize / 2);
+        const chromeGrad = ctx.createLinearGradient(x, y - fontSize / 2, x, y + fontSize / 2);
         chromeGrad.addColorStop(0, '#ffffff');
         chromeGrad.addColorStop(0.48, '#cbd5e1');
         chromeGrad.addColorStop(0.52, '#475569');
