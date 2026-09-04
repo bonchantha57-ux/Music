@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Album Studio Pro - កម្មវិធីបង្កើត Album & Video ចាក់តៗគ្នា (110+ Styles)</title>
+  <meta name="description" content="កម្មវិធីបង្កើត Album ចម្រៀងចាក់តៗគ្នា និងបង្កើត/ទាញយក Video (Full HD 1080p, 4K, 9:16, 16:9) ជាមួយ Typography និង Visualizer Style ជាង 110+ ជម្រើស" />
+
+  <!-- Google Fonts: Khmer & Modern Latin -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Bayon&family=Bebas+Neue&family=Bokor&family=Chenla&family=Cinzel:wght@600;800&family=Dangrek&family=Fasthand&family=Great+Vibes&family=Inter:wght@400;600;700&family=Kantumruy+Pro:ital,wght@0,400;0,600;0,700;1,400&family=Koh+Santepheap:wght@400;700&family=Metal&family=Montserrat:wght@400;600;800&family=Moul&family=Nokora:wght@400;700&family=Orbitron:wght@500;700;900&family=Outfit:wght@400;500;600;700;800&family=Poppins:wght@400;600;700&family=Preahvihear&family=Righteous&family=Siemreap&family=Space+Grotesk:wght@500;700&family=Syne:wght@700&display=swap" rel="stylesheet" />
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+  <!-- ==========================================================================
+       APP HEADER
+       ========================================================================== -->
+  <header class="app-header">
+    <div class="brand-container">
+      <div class="brand-logo-glow">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+        </svg>
+      </div>
+      <div class="brand-titles">
+        <div class="brand-title">
+          <span>ALBUM STUDIO</span>
+          <span class="brand-tag">110+ STYLES</span>
+        </div>
+        <span class="brand-subtitle" data-i18n="appSubtitle">កម្មវិធីបង្កើត Album & Video ចាក់តៗគ្នា</span>
+      </div>
+    </div>
+
+    <!-- Center Navigation Tabs -->
+    <nav class="header-center-nav">
+      <button class="nav-tab-btn active" data-tab="tabPresets">
+        <span data-i18n="tabPresets">🎨 Presets (110+)</span>
+      </button>
+      <button class="nav-tab-btn" data-tab="tabTracks">
+        <span data-i18n="tabTracks">🎵 បញ្ជីបទចម្រៀង</span>
+      </button>
+      <button class="nav-tab-btn" data-tab="tabTypography">
+        <span data-i18n="tabTypography">✍️ អក្សរ & Typography</span>
+      </button>
+      <button class="nav-tab-btn" data-tab="tabVisualizer">
+        <span data-i18n="tabVisualizer">⚡ Visualizer & ថាស</span>
+      </button>
+      <button class="nav-tab-btn" data-tab="tabBackground">
+        <span data-i18n="tabBackground">🌌 ផ្ទៃខាងក្រោយ</span>
+      </button>
+    </nav>
+
+    <!-- Header Actions -->
+    <div class="header-actions">
+      <!-- Language Toggle -->
+      <button class="btn-icon-square" id="langToggleBtn" title="ប្តូរភាសា (Switch Language)">
+        🇰🇭 ខ្មែរ
+      </button>
+
+      <!-- Export Video Primary Button -->
+      <button class="btn-export-primary" id="openExportModalBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+        </svg>
+        <span data-i18n="btnExport">🎬 ទាញយក Video</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       MAIN WORKSPACE
+       ========================================================================== -->
+  <main class="app-workspace">
+    
+    <!-- LEFT: PREVIEW & STAGE -->
+    <section class="stage-container">
+      <div class="stage-toolbar">
+        <!-- Aspect Ratio Selection -->
+        <div class="aspect-ratio-selector">
+          <button class="ratio-btn active" data-ratio="16:9">📺 16:9 (YouTube/TV)</button>
+          <button class="ratio-btn" data-ratio="9:16">📱 9:16 (TikTok/Reels/Shorts)</button>
+          <button class="ratio-btn" data-ratio="1:1">⬛ 1:1 (Instagram/FB)</button>
+          <button class="ratio-btn" data-ratio="4:5">🖼️ 4:5 (Portrait Feed)</button>
+        </div>
+
+        <div class="stage-view-controls">
+          <div class="stage-live-badge">
+            <div class="live-dot"></div>
+            <span>LIVE 60FPS</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Canvas Wrapper -->
+      <div class="canvas-wrapper">
+        <canvas id="previewCanvas"></canvas>
+      </div>
+    </section>
+
+    <!-- RIGHT: STUDIO SIDEBAR CONTROLS -->
+    <aside class="studio-sidebar">
+      <div class="sidebar-tab-panels">
+
+        <!-- TAB 1: PRESETS & THEMES (110+ STYLES) -->
+        <div class="tab-panel active" id="tabPresets">
+          <div class="studio-card">
+            <div class="card-header">
+              <span class="card-title">✨ ជ្រើសរើស Style & Theme ជាង 110+ ជម្រើស</span>
+              <span class="badge-count" id="presetsCountBadge">112 Styles</span>
+            </div>
+
+            <!-- Category Filter Pills -->
+            <div class="preset-category-nav" id="presetCategoryNav">
+              <!-- Dynamically populated -->
+            </div>
+
+            <!-- Search & Random Style Generator Bar -->
+            <div class="preset-search-row">
+              <div class="search-input-box">
+                <input type="text" class="text-input" id="presetSearchInput" placeholder="🔍 ស្វែងរក Style តាមឈ្មោះ..." />
+              </div>
+              <button class="btn-random-style" id="randomStyleBtn" title="បង្កើត Style ចៃដន្យ">
+                <span>🎲 ស្តាយចៃដន្យ</span>
+              </button>
+            </div>
+
+            <!-- Presets Grid -->
+            <div class="presets-grid" id="presetsGrid">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: TRACKLIST & ALBUM MANAGER -->
+        <div class="tab-panel" id="tabTracks">
+          <!-- Dropzone -->
+          <div class="dropzone" id="audioDropzone">
+            <div class="dropzone-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+              </svg>
+            </div>
+            <span class="dropzone-title" data-i18n="dropzoneTitle">ទម្លាក់ File ចម្រៀង (MP3, WAV, OGG) នៅទីនេះ</span>
+            <span class="dropzone-desc" data-i18n="dropzoneDesc">ឬចុចដើម្បីជ្រើសរើស File ពីកុំព្យូទ័ររបស់អ្នក</span>
+            <input type="file" id="audioFileInput" multiple accept="audio/*" style="display: none;" />
+          </div>
+
+          <!-- Tracklist items -->
+          <div class="studio-card">
+            <div class="card-header">
+              <span class="card-title">🎼 បញ្ជីបទចម្រៀងក្នុង Album (Drag ដើម្បីរៀបលំដាប់)</span>
+            </div>
+            <div class="tracklist-container" id="tracklistContainer">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: TYPOGRAPHY & TEXT STYLING + ON-SCREEN TRACKLIST -->
+        <div class="tab-panel" id="tabTypography">
+          <div class="studio-card">
+            <div class="card-header">
+              <span class="card-title">🔤 ពុម្ពអក្សរ & រចនាបទ (Khmer & English Fonts)</span>
+            </div>
+
+            <!-- Title Font -->
+            <div class="control-group">
+              <label class="control-label">Font ចំណងជើងធំ (Main Title Font)</label>
+              <select class="select-input" id="typoTitleFont">
+                <optgroup label="🇰🇭 ពុម្ពអក្សរខ្មែរ (Khmer Fonts)">
+                  <option value="Kantumruy Pro">Kantumruy Pro (ទំនើបពេញនិយម)</option>
+                  <option value="Battambang">Battambang (បាត់ដំបង)</option>
+                  <option value="Moul">Moul (មូលបុរាណ)</option>
+                  <option value="Siemreap">Siemreap (សៀមរាប)</option>
+                  <option value="Koh Santepheap">Koh Santepheap (កោះសន្តិភាព)</option>
+                  <option value="Bayon">Bayon (បាយ័ន)</option>
+                  <option value="Bokor">Bokor (បូកគោ)</option>
+                  <option value="Fasthand">Fasthand (អក្សរដៃ)</option>
+                  <option value="Metal">Metal (មាសរឹងមាំ)</option>
+                  <option value="Dangrek">Dangrek (ដងរែក)</option>
+                  <option value="Preahvihear">Preahvihear (ព្រះវិហារ)</option>
+                  <option value="Chenla">Chenla (ចេនឡា)</option>
+                </optgroup>
+                <optgroup label="🌍 Global Modern Fonts">
+                  <option value="Outfit">Outfit (Ultra Modern Clean)</option>
+                  <option value="Orbitron">Orbitron (Cyberpunk Sci-Fi)</option>
+                  <option value="Cinzel">Cinzel (Royal Luxury)</option>
+                  <option value="Space Grotesk">Space Grotesk (Tech Modern)</option>
+                  <option value="Bebas Neue">Bebas Neue (Bold Impact)</option>
+                  <option value="Great Vibes">Great Vibes (Romantic Script)</option>
+                  <option value="Poppins">Poppins (Geometric Round)</option>
+                  <option value="Montserrat">Montserrat (Classic Clean)</option>
+                  <option value="Righteous">Righteous (Retro 80s)</option>
+                  <option value="Syne">Syne (Artistic Avant-Garde)</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <!-- Artist Font -->
+            <div class="control-group">
+              <label class="control-label">Font ឈ្មោះតារាចម្រៀង (Artist/Album Font)</label>
+              <select class="select-input" id="typoArtistFont">
+                <option value="Kantumruy Pro" selected>Kantumruy Pro</option>
+                <option value="Battambang">Battambang</option>
+                <option value="Siemreap">Siemreap</option>
+                <option value="Outfit">Outfit</option>
+                <option value="Poppins">Poppins</option>
+                <option value="Space Grotesk">Space Grotesk</option>
+              </select>
+            </div>
+
+            <!-- Text Effect Style -->
+            <div class="control-group">
+              <label class="control-label">Style Effect លើអក្សរ (Text Effect)</label>
+              <select class="select-input" id="typoTextStyle">
+                <option value="gold" selected>👑 Luxury Gold (មាសប្រណិត)</option>
+                <option value="neon">⚡ Neon Glow (ភ្លើងនីអុងចាំង)</option>
+                <option value="chrome">💎 Chrome Metallic (ប្រាក់ឆ្លុះ)</option>
+                <option value="glitch">👾 Cyberpunk Glitch (ភ្លឹបភ្លែត)</option>
+                <option value="3d_shadow">🧱 3D Shadow (ស្រមោល 3D)</option>
+                <option value="floating_glass">🧊 Floating Glass Card (កញ្ចក់អណ្តែត)</option>
+                <option value="outline">✏️ Bold Outline Stroke (គែមដិត)</option>
+                <option value="soft_shadow">🎬 Soft Cinematic Shadow (ស្រមោលភាពយន្ត)</option>
+              </select>
+            </div>
+
+            <div class="grid-2">
+              <div class="control-group">
+                <label class="control-label">ទំហំចំណងជើង (Title Size)</label>
+                <input type="range" class="slider-input" id="typoTitleSize" min="24" max="90" value="52" />
+              </div>
+              <div class="control-group">
+                <label class="control-label">ទំហំអ្នកច្រៀង (Artist Size)</label>
+                <input type="range" class="slider-input" id="typoArtistSize" min="16" max="50" value="24" />
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="control-group">
+                <label class="control-label">ពណ៌អក្សរ (Text Color)</label>
+                <input type="color" class="text-input" id="typoTitleColor" value="#fef3c7" style="height: 38px; padding: 2px;" />
+              </div>
+              <div class="control-group">
+                <label class="control-label">ពណ៌ Glow/ពន្លឺ (Glow Color)</label>
+                <input type="color" class="text-input" id="typoGlowColor" value="#f59e0b" style="height: 38px; padding: 2px;" />
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="control-group">
+                <label class="control-label">ទីតាំងចំណងជើង ឡើង/ចុះ (Title Y-Pos)</label>
+                <input type="range" class="slider-input" id="typoTitleY" min="10" max="90" value="22" />
+              </div>
+              <div class="control-group">
+                <label class="control-label">ទីតាំងអ្នកច្រៀង ឡើង/ចុះ (Artist Y-Pos)</label>
+                <input type="range" class="slider-input" id="typoArtistY" min="10" max="90" value="30" />
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">តម្រឹមអក្សរ (Alignment)</label>
+              <select class="select-input" id="typoAlignment">
+                <option value="center" selected>កណ្តាល (Center)</option>
+                <option value="left">ខាងឆ្វេង (Left)</option>
+                <option value="right">ខាងស្តាំ (Right)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- ON-SCREEN TRACKLIST OVERLAY CARD -->
+          <div class="studio-card">
+            <div class="card-header">
+              <span class="card-title">📋 បង្ហាញបញ្ជីបទលើ Screen (Tracklist Overlay)</span>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">បង្ហាញបញ្ជីបទទាំងអស់លើ Screen</label>
+              <select class="select-input" id="overlayPosition">
+                <option value="left" selected>👈 បង្ហាញនៅខាងឆ្វេង (Left Side Card)</option>
+                <option value="right">👉 បង្ហាញនៅខាងស្តាំ (Right Side Card)</option>
+                <option value="top_left">🔝 ជ្រុងខាងលើ (Top-Left Badge)</option>
+                <option value="none">🚫 បិទមិនបង្ហាញ (Disable)</option>
+              </select>
+            </div>
+
+            <div class="grid-2">
+              <div class="control-group">
+                <label class="control-label">ទំហំអក្សរបញ្ជីបទ (Font Size)</label>
+                <input type="range" class="slider-input" id="overlayFontSize" min="12" max="28" value="18" />
+              </div>
+              <div class="control-group">
+                <label class="control-label">ពណ៌ Highlight បទកំពុងចាក់</label>
+                <input type="color" class="text-input" id="overlayHighlightColor" value="#f59e0b" style="height: 38px; padding: 2px;" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: VISUALIZER & CENTERPIECE (WITH CUSTOM COVER UPLOAD) -->
+        <div class="tab-panel" id="tabVisualizer">
+          <div class="studio-card">
+            <div class="card-header">
+              <span class="card-title">⚡ រលកសំឡេង Visualizer & រូបកណ្តាល (Center Artwork)</span>
+            </div>
+
+            <!-- Visualizer Type -->
+            <div class="control-group">
+              <label class="control-label">ប្រភេទ Visualizer (Visualizer Mode)</label>
+              <select class="select-input" id="vizType">
+                <option value="double_mirror_bars" selected>🪞 Mirrored Center Bars (របារឆ្លុះលើក្រោម)</option>
+                <option value="bars">📊 Classic Frequency Bars (របាររលកសំឡេង)</option>
+                <option value="circular">⭕ Circular Waveform Ring (រង្វង់រលកជុំវិញ Cover)</option>
+                <option value="waves">🌊 Fluid Liquid Wave (រលកទឹកហូរ)</option>
+                <option value="cyber_equalizer">📟 Cyber Equalizer Blocks (ដុំឌីជីថល LED)</option>
+                <option value="radial_pulse">💫 Radial Halo Pulse (ពន្លឺដង្ហើម Aura)</option>
+              </select>
+            </div>
+
+            <!-- VISUALIZER UP/DOWN Y-POSITION SLIDER -->
+            <div class="control-group" style="background: rgba(99, 102, 241, 0.1); padding: 10px; border-radius: var(--radius-sm); border: 1px solid rgba(99, 102, 241, 0.3);">
+              <label class="control-label" style="font-weight: 700; color: #a5b4fc;">
+                <span>↕️ ទីតាំង Visualizer ឡើងលើ / ចុះក្រោម (Visualizer Y-Pos)</span>
+                <span class="control-value-badge" id="vizYBadge">85%</span>
+              </label>
+              <input type="range" class="slider-input" id="vizPositionY" min="15" max="95" value="85" />
+            </div>
+
+            <!-- VISUALIZER HEIGHT SCALE & WIDTH PROPORTION -->
+            <div class="grid-2">
+              <div class="control-group" style="background: rgba(59, 130, 246, 0.08); padding: 8px 10px; border-radius: var(--radius-sm); border: 1px solid rgba(59, 130, 246, 0.25);">
+                <label class="control-label" style="font-weight: 600; color: #93c5fd;">
+                  <span>កម្ពស់រលក (Height)</span>
+                  <span class="control-value-badge" id="vizHeightBadge">40%</span>
+                </label>
+                <input type="range" class="slider-input" id="vizHeightScale" min="15" max="100" value="40" />
+              </div>
+              <div class="control-group" style="background: rgba(59, 130, 246, 0.08); padding: 8px 10px; border-radius: var(--radius-sm); border: 1px solid rgba(59, 130, 246, 0.25);">
+                <label class="control-label" style="font-weight: 600; color: #93c5fd;">
+                  <span>ទទឹងរលក (Width)</span>
+                  <span class="control-value-badge" id="vizWidthBadge">60%</span>
+                </label>
+                <input type="range" class="slider-input" id="vizWidthScale" min="30" max="90" value="60" />
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">ទម្រង់រលកសំឡេង (Frequency Distribution)</label>
+              <select class="select-input" id="vizLayout">
+                <option value="symmetric" selected>🪞 ឆ្លុះកណ្តាលសងខាង (Symmetric Center Peak - ពេញនិយម)</option>
+                <option value="linear">📈 ពីឆ្វេងទៅស្តាំ (Linear Spectrum Low-to-High)</option>
+              </select>
+            </div>
+
+            <!-- CENTERPIECE SHAPE SELECTOR (CIRCLE / SQUARE / MANDALA / VINYL / CD) -->
+            <div class="control-group">
+              <label class="control-label">រូបរាងកណ្តាល (Centerpiece Shape)</label>
+              <select class="select-input" id="vizArtworkType">
+                <option value="circle_cover">⭕ រង្វង់មូលពន្លឺ (Glowing Circular Disc)</option>
+                <option value="square_glass" selected>⬛ កាតកញ្ចក់ជ្រុង 3D (3D Square Glass Card)</option>
+                <option value="golden_mandala">🏵️ កងមាសខ្មែរ (Khmer Golden Mandala)</option>
+                <option value="vinyl">💿 ថាសវីនីលវិល (Realistic Vinyl LP)</option>
+                <option value="cd_jewel_case">💽 ប្រអប់ CD ថ្លា (CD Jewel Case)</option>
+                <option value="cassette">📼 កាសែតបុរាណ (Vintage Cassette)</option>
+                <option value="retro_boombox">📻 ម៉ាស៊ីនបាស (Street Boombox)</option>
+              </select>
+            </div>
+
+            <!-- CUSTOM CENTER COVER PHOTO UPLOADER & PREVIEW -->
+            <div class="control-group" style="background: rgba(245, 158, 11, 0.1); padding: 14px; border-radius: var(--radius-md); border: 1px solid rgba(245, 158, 11, 0.35);">
+              <label class="control-label" style="font-weight: 700; color: #fde68a; margin-bottom: 8px;">
+                <span>🖼️ ដាក់រូបភាពកណ្តាល / Cover (Upload Center Image)</span>
+              </label>
+              
+              <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
+                <label for="centerCoverUploadInput" class="btn-random-style" style="cursor: pointer; padding: 8px 14px; text-align: center; flex: 1;">
+                  📁 ជ្រើសរើសរូបភាព Cover...
+                </label>
+                <input type="file" id="centerCoverUploadInput" accept="image/*" style="display: none;" />
+                <button type="button" id="resetCenterCoverBtn" class="btn-icon-square" title="លុបរូប Cover ចេញ" style="display: none; background: rgba(239, 68, 68, 0.2); color: #f87171; border-color: rgba(239, 68, 68, 0.4);">
+                  🗑️
+                </button>
+              </div>
+
+              <!-- Cover Image Preview Thumbnail -->
+              <div id="centerCoverPreviewBox" style="display: none; align-items: center; gap: 10px; background: rgba(0,0,0,0.4); padding: 8px; border-radius: 8px;">
+                <img id="centerCoverThumbnail" src="" style="width: 44px; height: 44px; border-radius: 6px; object-fit: cover; border: 1px solid rgba(255,255,255,0.2);" />
+                <div style="flex: 1; min-width: 0;">
+                  <div id="centerCoverFileName" style="font-size: 0.8rem; color: #fef3c7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Cover Loaded</div>
+                  <div style="font-size: 0.7rem; color: #a1a1aa;">បានអនុវត្តលើរូបកណ្តាល</div>
+                </div>
+              </div>
+
+              <div style="margin-top: 10px;">
+                <label style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #fde68a; cursor: pointer;">
+                  <input type="checkbox" id="applyCoverToAllTracksCheckbox" checked style="accent-color: #f59e0b;" />
+                  <span>អនុវត្តរូបនេះលើគ្រប់បទទាំងអស់ក្នុង Album</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- ARTWORK / COVER UP/DOWN Y-POSITION SLIDER -->
+            <div class="control-group" style="background: rgba(168, 85, 247, 0.1); padding: 10px; border-radius: var(--radius-sm); border: 1px solid rgba(168, 85, 247, 0.3);">
+              <label class="control-label" style="font-weight: 700; color: #d8b4fe;">
+                <span>↕️ ទីតាំងរូបកណ្តាល ឡើងលើ / ចុះក្រោម (Centerpiece Y-Pos)</span>
+                <span class="control-value-badge" id="artYBadge">50%</span>
+              </label>
+              <input type="range" class="slider-input" id="artPositionY" min="15" max="85" value="50" />
+            </div>
+
+            <div class="grid-2">
+              <div class="control-group">
+                <label class="control-label">ទំហំរូបកណ្តាល (Center Size)</label>
+                <input type="range" class="slider-input" id="vizArtworkSize" min="150" max="480" value="280" />
+              </div>
+              <div class="control-group">
+                <label class="control-label">ល្បឿនវិល (Spin Speed)</label>
+                <input type="range" class="slider-input" id="vizRotationSpeed" min="0" max="2" step="0.1" value="0.5" />
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="control-group">
+                <label class="control-label">ភាពរំញោចភ្លេង (Sensitivity)</label>
+                <input type="range" class="slider-input" id="vizSensitivity" min="0.5" max="2.5" step="0.1" value="1.3" />
+              </div>
+              <div class="control-group">
+                <label class="control-label">ចំនួនរបារ (Bar Count)</label>
+                <input type="range" class="slider-input" id="vizBarCount" min="20" max="120" value="64" />
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="control-group">
+                <label class="control-label">ពណ៌ពន្លឺ 1 (Color 1)</label>
+                <input type="color" class="text-input" id="vizColor1" value="#f59e0b" style="height: 38px; padding: 2px;" />
+              </div>
+              <div class="control-group">
+                <label class="control-label">ពណ៌ពន្លឺ 2 (Color 2)</label>
+                <input type="color" class="text-input" id="vizColor2" value="#fbbf24" style="height: 38px; padding: 2px;" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 5: BACKGROUND & FX (WITH CUSTOM BACKGROUND PHOTO UPLOAD) -->
+        <div class="tab-panel" id="tabBackground">
+          <div class="studio-card">
+            <div class="card-header">
+              <span class="card-title">🌌 ផ្ទៃខាងក្រោយ & Effect (Backgrounds)</span>
+            </div>
+
+            <!-- CUSTOM BACKGROUND PHOTO UPLOADER & CONTROLS -->
+            <div class="control-group" style="background: rgba(6, 182, 212, 0.1); padding: 14px; border-radius: var(--radius-md); border: 1px solid rgba(6, 182, 212, 0.35);">
+              <label class="control-label" style="font-weight: 700; color: #67e8f9; margin-bottom: 8px;">
+                <span>🖼️ ដាក់រូបភាព Background ផ្ទាល់ខ្លួន (Upload Background Image)</span>
+              </label>
+              
+              <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
+                <label for="customBgInput" class="btn-random-style" style="cursor: pointer; padding: 8px 14px; text-align: center; flex: 1;">
+                  📁 ជ្រើសរើសរូប Background...
+                </label>
+                <input type="file" id="customBgInput" accept="image/*" style="display: none;" />
+                <button type="button" id="removeCustomBgBtn" class="btn-icon-square" title="លុបរូប Background ចេញ" style="display: none; background: rgba(239, 68, 68, 0.2); color: #f87171; border-color: rgba(239, 68, 68, 0.4);">
+                  🗑️
+                </button>
+              </div>
+
+              <!-- Background Thumbnail Preview -->
+              <div id="customBgPreviewBox" style="display: none; align-items: center; gap: 10px; background: rgba(0,0,0,0.4); padding: 8px; border-radius: 8px;">
+                <img id="customBgThumbnail" src="" style="width: 60px; height: 36px; border-radius: 6px; object-fit: cover; border: 1px solid rgba(255,255,255,0.2);" />
+                <div style="flex: 1; min-width: 0;">
+                  <div id="customBgFileName" style="font-size: 0.8rem; color: #a5f3fc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Custom Background Active</div>
+                  <div style="font-size: 0.7rem; color: #67e8f9;">✨ កំពុងប្រើជារូបផ្ទៃក្រោយ</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Background Mode Preset List -->
+            <div class="control-group">
+              <label class="control-label">ប្រភេទផ្ទៃខាងក្រោយ (Background Mode)</label>
+              <select class="select-input" id="bgType">
+                <option value="custom_image">🖼️ Custom Image (រូបភាពផ្ទាល់ខ្លួន)</option>
+                <option value="radial_glow" selected>✨ Audio Reactive Radial Glow (ពណ៌ប្តូរតាមភ្លេង)</option>
+                <option value="synthwave_grid">🌆 Synthwave 80s 3D Perspective Grid & Sun</option>
+                <option value="blurred_cover">🖼️ Blurred Cover Art (ព្រិលរូប Cover)</option>
+                <option value="nebula_stars">🌌 Deep Space Galaxy & Stars</option>
+                <option value="matrix_rain">🟩 Matrix Digital Code Rain (ភ្លៀងកូដបៃតង)</option>
+                <option value="disco_lasers">🔦 Nightclub Laser Beams (កាំរស្មីឡាស៊ែរ)</option>
+                <option value="sakura_petals">🌸 Falling Sakura Petals (ផ្កាសាគូរ៉ាជ្រុះ)</option>
+              </select>
+            </div>
+
+            <div class="grid-2">
+              <div class="control-group">
+                <label class="control-label">កម្រិតព្រិល Background (Blur)</label>
+                <input type="range" class="slider-input" id="bgBlur" min="0" max="60" value="0" />
+              </div>
+              <div class="control-group">
+                <label class="control-label">ភាពងងឹត Overlay (Dim/Darkness)</label>
+                <input type="range" class="slider-input" id="bgDimSlider" min="0" max="90" value="30" />
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="control-group">
+                <label class="control-label">ពណ៌ចម្បង 1 (Primary)</label>
+                <input type="color" class="text-input" id="bgPrimaryColor" value="#0b1120" style="height: 38px; padding: 2px;" />
+              </div>
+              <div class="control-group">
+                <label class="control-label">ពណ៌បន្ទាប់ 2 (Secondary)</label>
+                <input type="color" class="text-input" id="bgSecondaryColor" value="#1e1b4b" style="height: 38px; padding: 2px;" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+  </main>
+
+  <!-- ==========================================================================
+       BOTTOM PLAYBACK CONTROL BAR
+       ========================================================================== -->
+  <footer class="app-bottom-bar" id="appBottomBar">
+    <!-- Left: Now Playing Info -->
+    <div class="now-playing-box">
+      <div class="now-playing-art-wrap">
+        <img class="now-playing-art" id="nowPlayingArt" src="" alt="Now Playing" />
+        <div class="mini-eq-bars" id="miniEqBars">
+          <span class="bar bar-1"></span>
+          <span class="bar bar-2"></span>
+          <span class="bar bar-3"></span>
+        </div>
+      </div>
+      <div class="now-playing-meta">
+        <span class="now-playing-title" id="nowPlayingTitle">រាត្រីផ្កាយរះ</span>
+        <span class="now-playing-artist" id="nowPlayingArtist">Sinn Sisamouth & Ros Sereysothea</span>
+      </div>
+    </div>
+
+    <!-- Center: Main Player Controls -->
+    <div class="player-main-center">
+      <div class="player-controls">
+        <button class="player-btn" id="repeatModeBtn" title="Repeat Mode: Sequence">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="17 1 21 5 17 9"></polyline>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+            <polyline points="7 23 3 19 7 15"></polyline>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+          </svg>
+        </button>
+
+        <button class="player-btn" id="prevTrackBtn" title="Previous Track (បទមុន)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="19 20 9 12 19 4 19 20"></polygon>
+            <line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" stroke-width="3"></line>
+          </svg>
+        </button>
+
+        <button class="player-btn-play" id="playPauseBtn" title="Play / Pause (ចាក់ / ផ្អាក)">
+          <span id="playPauseIcon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="6 3 20 12 6 21 6 3"></polygon>
+            </svg>
+          </span>
+        </button>
+
+        <button class="player-btn" id="nextTrackBtn" title="Next Track (បទបន្ទាប់)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5 4 15 12 5 20 5 4"></polygon>
+            <line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="3"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Progress Bar & Timecodes -->
+      <div class="player-progress-row">
+        <span class="time-stamp" id="currentTimeStamp">0:00</span>
+        <div class="progress-bar-wrapper">
+          <input type="range" class="progress-bar-slider" id="playerProgressBar" min="0" max="100" value="0" />
+        </div>
+        <span class="time-stamp right" id="durationTimeStamp">0:30</span>
+      </div>
+    </div>
+
+    <!-- Right: Volume & Options -->
+    <div class="player-extra-controls">
+      <div class="ratio-badge-pill" id="bottomRatioBadge" title="Current Format">16:9 YouTube</div>
+      <div class="volume-container">
+        <button class="player-btn-mini" id="volumeMuteBtn" title="Mute / Unmute">
+          <svg id="volumeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+        </button>
+        <input type="range" class="slider-input volume-bar-slider" id="volumeSlider" min="0" max="100" value="90" />
+      </div>
+      <button class="player-btn-mini" id="fullscreenStageBtn" title="Fullscreen Preview (ពេញអេក្រង់)">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+      </button>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       MODALS: EXPORT VIDEO & EDIT TRACK METADATA
+       ========================================================================== -->
+
+  <!-- Export Video Modal -->
+  <div class="modal-backdrop" id="exportModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <span class="modal-title" data-i18n="modalExportTitle">🎬 ជម្រើស Render & ទាញយក Video</span>
+        <button class="btn-icon-square" id="closeExportModalBtn">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="control-group">
+          <label class="control-label" data-i18n="exportModeLabel">ជម្រើសបទដែលត្រូវ Render</label>
+          <select class="select-input" id="exportScopeSelect">
+            <option value="current" data-i18n="exportModeCurrent">តែបទកំពុងចាក់ (Current Song)</option>
+            <option value="full_album" selected data-i18n="exportModeAlbum">បទទាំងអស់ក្នុង Album (Full Continuous Album)</option>
+          </select>
+        </div>
+
+        <div class="grid-2">
+          <div class="control-group">
+            <label class="control-label" data-i18n="resolutionLabel">កម្រិតច្បាស់ Video (Resolution)</label>
+            <select class="select-input" id="exportResolutionSelect">
+              <option value="1080p" selected>Full HD 1080p (ច្បាស់កម្រិតស្តង់ដារ)</option>
+              <option value="720p">HD 720p (Render លឿនរហ័ស)</option>
+              <option value="4k">4K Ultra HD (ច្បាស់កម្រិតខ្ពស់បំផុត)</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label class="control-label" data-i18n="fpsLabel">ល្បឿន Frame (FPS)</label>
+            <select class="select-input" id="exportFpsSelect">
+              <option value="30" selected>30 FPS (ស្តង់ដារ)</option>
+              <option value="60">60 FPS (រលូនខ្លាំង Smooth)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Export Progress Indicator -->
+        <div class="export-progress-box" id="exportProgressBox">
+          <div class="progress-header">
+            <span>កំពុង Render Video...</span>
+            <span id="exportProgressText">0%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="exportProgressFill"></div>
+          </div>
+          <div class="export-stats-row">
+            <span id="exportStatsText">Elapsed: 0s | Remaining: calculating...</span>
+            <button class="btn-secondary" id="cancelExportBtn" style="padding: 4px 12px; font-size: 0.75rem;">បោះបង់ (Cancel)</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-export-primary" id="startExportBtn" style="width: 100%; justify-content: center;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+          </svg>
+          <span data-i18n="btnStartExport">🚀 ចាប់ផ្តើម Render & ទាញយក Video ភ្លាមៗ</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Track Metadata Modal (With Track Cover Upload) -->
+  <div class="modal-backdrop" id="editTrackModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <span class="modal-title">✏️ កែសម្រួលព័ត៌មានបទចម្រៀង</span>
+        <button class="btn-icon-square" id="closeEditModalBtn">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="control-group">
+          <label class="control-label">ចំណងជើងបទចម្រៀង (Song Title)</label>
+          <input type="text" class="text-input" id="editTrackTitle" placeholder="ឧទាហរណ៍៖ រាត្រីផ្កាយរះ" />
+        </div>
+        <div class="control-group">
+          <label class="control-label">ឈ្មោះតារាចម្រៀង (Artist Name)</label>
+          <input type="text" class="text-input" id="editTrackArtist" placeholder="ឧទាហរណ៍៖ Sinn Sisamouth" />
+        </div>
+        <div class="control-group">
+          <label class="control-label">ឈ្មោះ Album (Album Name)</label>
+          <input type="text" class="text-input" id="editTrackAlbum" placeholder="ឧទាហរណ៍៖ Khmer Classic Vol. 1" />
+        </div>
+        <!-- EDIT TRACK COVER IMAGE -->
+        <div class="control-group" style="background: rgba(99, 102, 241, 0.1); padding: 10px; border-radius: var(--radius-sm);">
+          <label class="control-label">🖼️ ប្តូររូបភាព Cover សម្រាប់បទនេះ (Track Cover Image)</label>
+          <input type="file" class="text-input" id="editTrackCoverInput" accept="image/*" />
+        </div>
+        <div class="control-group">
+          <label class="control-label">ទំនុកច្រៀង / Lyrics (ទម្រង់: [វិនាទី] អត្ថបទ)</label>
+          <textarea class="textarea-input" id="editTrackLyrics" rows="4" placeholder="[0] ភ្លេងចាប់ផ្តើម...&#10;[5] ទំនុកច្រៀងឃ្លាទីមួយ...&#10;[12] ទំនុកច្រៀងឃ្លាទីពីរ..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-export-primary" id="saveTrackEditBtn">💾 រក្សាទុក (Save Changes)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Scripts -->
+  <script src="js/demoData.js"></script>
+  <script src="js/audioEngine.js"></script>
+  <script src="js/presets.js"></script>
+  <script src="js/typography.js"></script>
+  <script src="js/visualizer.js"></script>
+  <script src="js/videoExporter.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
