@@ -513,6 +513,104 @@
               </div>
             </div>
           </div>
+
+          <!-- BRAND LOGO / WATERMARK ON VIDEO (DRAGGABLE TO ANYWHERE) -->
+          <div class="studio-card" id="logoOverlayCard" style="border-color: rgba(245, 158, 11, 0.35); background: rgba(245, 158, 11, 0.05);">
+            <div class="card-header">
+              <span class="card-title" style="color: #fde68a;">🏷️ Logo Watermark លើ Video (អូសទីតាំងបាន)</span>
+              <label class="switch-toggle" title="បើក/បិទ Logo លើ Video">
+                <input type="checkbox" id="logoOverlayToggle" checked />
+                <span class="slider-round"></span>
+              </label>
+            </div>
+
+            <!-- Logo Controls Body -->
+            <div id="logoControlsBody" style="display: flex; flex-direction: column; gap: 12px;">
+              <!-- Upload Logo & Preset Button -->
+              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <label for="customLogoUploadInput" class="btn-random-style" style="cursor: pointer; padding: 7px 12px; font-size: 0.8rem; flex: 1; text-align: center;">
+                  📁 ប្តូររូប Logo...
+                </label>
+                <input type="file" id="customLogoUploadInput" accept="image/*" style="display: none;" />
+                <button type="button" id="useDefaultBctLogoBtn" class="btn-random-style" style="background: rgba(99, 102, 241, 0.2); border-color: rgba(99, 102, 241, 0.5); color: #a5b4fc; font-size: 0.8rem; padding: 7px 12px;">
+                  ⚡ ប្រើ BCT Logo
+                </button>
+              </div>
+
+              <!-- Logo Preview & Quick Drag Note -->
+              <div style="display: flex; align-items: center; gap: 12px; background: rgba(0,0,0,0.35); padding: 8px 12px; border-radius: var(--radius-sm); border: 1px dashed rgba(245, 158, 11, 0.4);">
+                <img id="logoPreviewThumb" src="assets/bct_music_logo.jpg" style="width: 42px; height: 42px; border-radius: 8px; object-fit: cover; border: 1px solid rgba(255,255,255,0.2);" />
+                <div style="flex: 1; font-size: 0.76rem; color: #cbd5e1;">
+                  <span style="color: #fbbf24; font-weight: 700;">👆 គន្លឹះពិសេស:</span> អ្នកអាចចុចអូស Logo ផ្ទាល់នៅលើផ្ទាំង Video (Canvas) ទៅដាក់ទីតាំងណាក៏បានដោយសេរី!
+                </div>
+              </div>
+
+              <!-- Quick Position Buttons -->
+              <div class="control-group">
+                <label class="control-label">ទីតាំងលឿន (Quick Position)</label>
+                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px;">
+                  <button type="button" class="btn-preset-pos" data-pos="top_left" title="លើ ឆ្វេង">↖️ លើឆ្វេង</button>
+                  <button type="button" class="btn-preset-pos" data-pos="top_right" title="លើ ស្តាំ">↗️ លើស្តាំ</button>
+                  <button type="button" class="btn-preset-pos" data-pos="center" title="កណ្តាល">🎯 កណ្តាល</button>
+                  <button type="button" class="btn-preset-pos" data-pos="bottom_left" title="ក្រោម ឆ្វេង">↙️ ក្រោមឆ្វេង</button>
+                  <button type="button" class="btn-preset-pos" data-pos="bottom_right" title="ក្រោម ស្តាំ">↘️ ក្រោមស្តាំ</button>
+                </div>
+              </div>
+
+              <!-- Position Sliders -->
+              <div class="grid-2">
+                <div class="control-group">
+                  <label class="control-label">
+                    <span>ឆ្វេង ទៅ ស្តាំ (X-Pos)</span>
+                    <span class="control-value-badge" id="logoPosXBadge">88%</span>
+                  </label>
+                  <input type="range" class="slider-input" id="logoPosXSlider" min="5" max="95" value="88" />
+                </div>
+                <div class="control-group">
+                  <label class="control-label">
+                    <span>លើ ទៅ ក្រោម (Y-Pos)</span>
+                    <span class="control-value-badge" id="logoPosYBadge">12%</span>
+                  </label>
+                  <input type="range" class="slider-input" id="logoPosYSlider" min="5" max="95" value="12" />
+                </div>
+              </div>
+
+              <!-- Size, Opacity, Shape -->
+              <div class="grid-2">
+                <div class="control-group">
+                  <label class="control-label">
+                    <span>ទំហំ Logo (Size)</span>
+                    <span class="control-value-badge" id="logoSizeBadge">110px</span>
+                  </label>
+                  <input type="range" class="slider-input" id="logoSizeSlider" min="40" max="260" value="110" />
+                </div>
+                <div class="control-group">
+                  <label class="control-label">
+                    <span>ភាពច្បាស់ (Opacity)</span>
+                    <span class="control-value-badge" id="logoOpacityBadge">90%</span>
+                  </label>
+                  <input type="range" class="slider-input" id="logoOpacitySlider" min="20" max="100" value="90" />
+                </div>
+              </div>
+
+              <div class="grid-2">
+                <div class="control-group">
+                  <label class="control-label">រូបរាង Logo (Shape)</label>
+                  <select class="select-input" id="logoShapeSelect">
+                    <option value="rounded_glow" selected>⬛ កញ្ចក់ជ្រុងមូល Glow (Rounded Glass)</option>
+                    <option value="circle">⭕ រង្វង់មូល (Glowing Circle)</option>
+                    <option value="shield">🛡️ ប្លាកសញ្ញា (Emblem Shield)</option>
+                    <option value="original">🖼️ រូបដើម Original (Direct Image)</option>
+                  </select>
+                </div>
+                <div class="control-group">
+                  <label class="control-label">ពណ៌ពន្លឺ Glow (Glow Color)</label>
+                  <input type="color" class="text-input" id="logoGlowColor" value="#f59e0b" style="height: 38px; padding: 2px;" />
+                </div>
+              </div>
+
+            </div>
+          </div>
         </div>
 
       </div>

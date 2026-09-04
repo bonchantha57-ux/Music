@@ -70,6 +70,17 @@ class VisualizerEngine {
         highlightColor: '#f59e0b',
         activeGlow: '#fbbf24',
         bgOpacity: 0.75
+      },
+      logoOverlay: {
+        enabled: true,
+        src: 'assets/bct_music_logo.jpg',
+        posX: 0.88,
+        posY: 0.12,
+        size: 110,
+        opacity: 0.90,
+        shape: 'rounded_glow', // 'rounded_glow', 'circle', 'shield', 'original'
+        glowColor: '#f59e0b',
+        glowIntensity: 18
       }
     };
 
@@ -78,6 +89,15 @@ class VisualizerEngine {
     this.coverImageObj = new Image();
     this.coverImageObj.crossOrigin = 'anonymous';
     this.backgroundImageObj = null;
+    this.logoImageObj = new Image();
+    this.logoImageObj.crossOrigin = 'anonymous';
+    this.logoImageObj.src = this.config.logoOverlay.src;
+    this.logoBounds = null;
+    this.isDraggingLogo = false;
+    this.isHoveringLogo = false;
+    this.dragOffset = { x: 0, y: 0 };
+    this.onLogoPositionChange = null;
+
     this.rotationAngle = 0;
     this.particles = [];
     this.petals = [];
@@ -91,6 +111,7 @@ class VisualizerEngine {
     this.initPetals();
     this.initMatrix();
     this.updateCanvasDimensions();
+    this.setupPointerEvents();
   }
 
   setTrack(track) {
@@ -120,6 +141,13 @@ class VisualizerEngine {
     this.backgroundImageObj = null;
     this.config.background.customImage = null;
     this.config.background.type = 'radial_glow';
+  }
+
+  setLogoImage(imageSrc) {
+    this.config.logoOverlay.src = imageSrc;
+    this.logoImageObj = new Image();
+    this.logoImageObj.crossOrigin = 'anonymous';
+    this.logoImageObj.src = imageSrc;
   }
 
   /**
@@ -338,6 +366,11 @@ class VisualizerEngine {
     // 5. Render On-Screen Album Tracklist (Auto-Highlight active song)
     if (this.config.tracklistOverlay?.enabled) {
       this.renderTracklistOverlay(ctx, w, h, analysis);
+    }
+
+    // 6. Render Draggable Watermark / Brand Logo Overlay
+    if (this.config.logoOverlay?.enabled) {
+      this.renderLogoOverlay(ctx, w, h, analysis);
     }
   }
 
@@ -1223,6 +1256,239 @@ class VisualizerEngine {
     }
 
     ctx.restore();
+  }
+
+  /**
+   * Render Draggable Watermark / Brand Logo Overlay on Canvas
+   */
+  renderLogoOverlay(ctx, w, h, analysis) {
+    const logoConf = this.config.logoOverlay;
+    if (!logoConf || !logoConf.enabled) return;
+
+    const baseScale = w / 1920;
+    const logoSize = Math.max(30, (logoConf.size || 110) * baseScale);
+    const cx = (logoConf.posX !== undefined ? logoConf.posX : 0.88) * w;
+    const cy = (logoConf.posY !== undefined ? logoConf.posY : 0.12) * h;
+    const x = cx - logoSize / 2;
+    const y = cy - logoSize / 2;
+
+    // Cache bounding box for direct hit testing & dragging
+    this.logoBounds = {
+      x: x,
+      y: y,
+      width: logoSize,
+      height: logoSize,
+      cx: cx,
+      cy: cy
+    };
+
+    ctx.save();
+    ctx.globalAlpha = Math.min(1, Math.max(0.1, logoConf.opacity !== undefined ? logoConf.opacity : 0.9));
+
+    const glowColor = logoConf.glowColor || '#f59e0b';
+    const glowIntensity = (logoConf.glowIntensity || 18) * baseScale;
+    const shape = logoConf.shape || 'rounded_glow';
+
+    // Interactive Dragging / Hover Feedback Outline
+    if (this.isDraggingLogo || this.isHoveringLogo) {
+      ctx.save();
+      ctx.strokeStyle = this.isDraggingLogo ? '#ec4899' : '#06b6d4';
+      ctx.lineWidth = 2.5 * baseScale;
+      ctx.setLineDash([6 * baseScale, 4 * baseScale]);
+      ctx.shadowColor = this.isDraggingLogo ? 'rgba(236, 72, 153, 0.8)' : 'rgba(6, 182, 212, 0.8)';
+      ctx.shadowBlur = 12 * baseScale;
+      const pad = 6 * baseScale;
+      window.typographyEngine.roundRect(ctx, x - pad, y - pad, logoSize + pad * 2, logoSize + pad * 2, 10 * baseScale);
+      ctx.stroke();
+
+      // Tooltip pill
+      if (this.isDraggingLogo) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+        ctx.setLineDash([]);
+        const tipW = 120 * baseScale;
+        const tipH = 24 * baseScale;
+        window.typographyEngine.roundRect(ctx, cx - tipW / 2, y - pad - tipH - 6 * baseScale, tipW, tipH, 6 * baseScale);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = `bold ${12 * baseScale}px "Outfit", sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('✋ Moving Logo', cx, y - pad - tipH / 2 - 6 * baseScale);
+      }
+      ctx.restore();
+    }
+
+    // Glow Aura
+    if (glowIntensity > 0) {
+      ctx.shadowColor = glowColor;
+      ctx.shadowBlur = glowIntensity;
+    }
+
+    // Draw Shape clipping & Background/Border
+    if (shape === 'circle') {
+      ctx.beginPath();
+      ctx.arc(cx, cy, logoSize / 2, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.save();
+      ctx.clip();
+      if (this.logoImageObj && this.logoImageObj.complete && this.logoImageObj.naturalWidth > 0) {
+        this.drawCoverImageFit(ctx, this.logoImageObj, x, y, logoSize, logoSize);
+      } else {
+        ctx.fillStyle = '#0f172a';
+        ctx.fill();
+      }
+      ctx.restore();
+
+      ctx.strokeStyle = glowColor;
+      ctx.lineWidth = 2.5 * baseScale;
+      ctx.beginPath();
+      ctx.arc(cx, cy, logoSize / 2, 0, Math.PI * 2);
+      ctx.stroke();
+
+    } else if (shape === 'shield') {
+      const r = logoSize * 0.16;
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + logoSize - r, y);
+      ctx.quadraticCurveTo(x + logoSize, y, x + logoSize, y + r);
+      ctx.lineTo(x + logoSize, y + logoSize * 0.7);
+      ctx.quadraticCurveTo(x + logoSize, y + logoSize, cx, y + logoSize);
+      ctx.quadraticCurveTo(x, y + logoSize, x, y + logoSize * 0.7);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+      ctx.clip();
+
+      if (this.logoImageObj && this.logoImageObj.complete && this.logoImageObj.naturalWidth > 0) {
+        this.drawCoverImageFit(ctx, this.logoImageObj, x, y, logoSize, logoSize);
+      } else {
+        ctx.fillStyle = '#0f172a';
+        ctx.fill();
+      }
+      ctx.restore();
+
+      ctx.strokeStyle = glowColor;
+      ctx.lineWidth = 2 * baseScale;
+      ctx.stroke();
+
+    } else if (shape === 'original') {
+      if (this.logoImageObj && this.logoImageObj.complete && this.logoImageObj.naturalWidth > 0) {
+        this.drawCoverImageFit(ctx, this.logoImageObj, x, y, logoSize, logoSize);
+      }
+    } else {
+      // Default: rounded_glow
+      const radius = logoSize * 0.18;
+      ctx.save();
+      window.typographyEngine.roundRect(ctx, x, y, logoSize, logoSize, radius);
+      ctx.clip();
+      if (this.logoImageObj && this.logoImageObj.complete && this.logoImageObj.naturalWidth > 0) {
+        this.drawCoverImageFit(ctx, this.logoImageObj, x, y, logoSize, logoSize);
+      } else {
+        ctx.fillStyle = '#0f172a';
+        ctx.fill();
+      }
+      ctx.restore();
+
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+      ctx.lineWidth = 1.5 * baseScale;
+      window.typographyEngine.roundRect(ctx, x, y, logoSize, logoSize, radius);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
+  /**
+   * Pointer Events for Direct Canvas Dragging of Logo Watermark
+   */
+  setupPointerEvents() {
+    if (!this.canvas) return;
+
+    this.canvas.addEventListener('mousedown', (e) => this.handlePointerDown(e));
+    window.addEventListener('mousemove', (e) => this.handlePointerMove(e));
+    window.addEventListener('mouseup', () => this.handlePointerUp());
+
+    this.canvas.addEventListener('touchstart', (e) => {
+      if (e.touches && e.touches[0]) this.handlePointerDown(e.touches[0]);
+    }, { passive: false });
+
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches && e.touches[0]) this.handlePointerMove(e.touches[0]);
+    }, { passive: false });
+
+    window.addEventListener('touchend', () => this.handlePointerUp());
+  }
+
+  getCanvasPointerPos(e) {
+    const rect = this.canvas.getBoundingClientRect();
+    const clientX = e.clientX;
+    const clientY = e.clientY;
+    if (clientX === undefined || clientY === undefined) return { x: 0, y: 0 };
+    const scaleX = this.canvas.width / rect.width;
+    const scaleY = this.canvas.height / rect.height;
+    return {
+      x: (clientX - rect.left) * scaleX,
+      y: (clientY - rect.top) * scaleY
+    };
+  }
+
+  isPointInsideLogo(pos) {
+    if (!this.logoBounds || !this.config.logoOverlay?.enabled) return false;
+    const pad = 15 * (this.canvas.width / 1920);
+    return (
+      pos.x >= this.logoBounds.x - pad &&
+      pos.x <= this.logoBounds.x + this.logoBounds.width + pad &&
+      pos.y >= this.logoBounds.y - pad &&
+      pos.y <= this.logoBounds.y + this.logoBounds.height + pad
+    );
+  }
+
+  handlePointerDown(e) {
+    if (!this.config.logoOverlay?.enabled) return;
+    const pos = this.getCanvasPointerPos(e);
+    if (this.isPointInsideLogo(pos)) {
+      this.isDraggingLogo = true;
+      this.dragOffset = {
+        x: pos.x - this.logoBounds.cx,
+        y: pos.y - this.logoBounds.cy
+      };
+      this.canvas.style.cursor = 'grabbing';
+      if (e.preventDefault) e.preventDefault();
+    }
+  }
+
+  handlePointerMove(e) {
+    if (!this.config.logoOverlay?.enabled) return;
+    const pos = this.getCanvasPointerPos(e);
+
+    if (this.isDraggingLogo) {
+      const newCx = pos.x - this.dragOffset.x;
+      const newCy = pos.y - this.dragOffset.y;
+      const posX = Math.max(0.04, Math.min(0.96, newCx / this.canvas.width));
+      const posY = Math.max(0.04, Math.min(0.96, newCy / this.canvas.height));
+      this.config.logoOverlay.posX = posX;
+      this.config.logoOverlay.posY = posY;
+
+      if (typeof this.onLogoPositionChange === 'function') {
+        this.onLogoPositionChange(posX, posY);
+      }
+      if (e.preventDefault) e.preventDefault();
+    } else {
+      const inside = this.isPointInsideLogo(pos);
+      if (inside !== this.isHoveringLogo) {
+        this.isHoveringLogo = inside;
+        this.canvas.style.cursor = inside ? 'grab' : 'default';
+      }
+    }
+  }
+
+  handlePointerUp() {
+    if (this.isDraggingLogo) {
+      this.isDraggingLogo = false;
+      this.canvas.style.cursor = this.isHoveringLogo ? 'grab' : 'default';
+    }
   }
 }
 

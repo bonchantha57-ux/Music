@@ -83,6 +83,7 @@ class AppController {
     this.setupVisualizerControls();
     this.setupBackgroundControls();
     this.setupCustomImageUploads();
+    this.setupLogoOverlayControls();
 
     this.visualizer.start();
     this.updateLanguageUI();
@@ -796,6 +797,131 @@ class AppController {
     bindInput('bgDimSlider', val => this.visualizer.config.background.dim = parseInt(val, 10));
   }
 
+  setupLogoOverlayControls() {
+    const bindInput = (id, callback) => {
+      const elem = document.getElementById(id);
+      if (elem) elem.addEventListener('input', (e) => callback(e.target.value));
+    };
+
+    // Toggle switch
+    const logoToggle = document.getElementById('logoOverlayToggle');
+    const logoBody = document.getElementById('logoControlsBody');
+    if (logoToggle) {
+      logoToggle.addEventListener('change', (e) => {
+        this.visualizer.config.logoOverlay.enabled = e.target.checked;
+        if (logoBody) {
+          logoBody.style.opacity = e.target.checked ? '1' : '0.4';
+          logoBody.style.pointerEvents = e.target.checked ? 'auto' : 'none';
+        }
+      });
+    }
+
+    // Custom Logo File Upload
+    const logoFileInput = document.getElementById('customLogoUploadInput');
+    const logoThumb = document.getElementById('logoPreviewThumb');
+    if (logoFileInput) {
+      logoFileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            const src = ev.target.result;
+            this.visualizer.setLogoImage(src);
+            if (logoThumb) logoThumb.src = src;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    // Use default BCT logo button
+    document.getElementById('useDefaultBctLogoBtn')?.addEventListener('click', () => {
+      const defaultBctSrc = 'assets/bct_music_logo.jpg';
+      this.visualizer.setLogoImage(defaultBctSrc);
+      if (logoThumb) logoThumb.src = defaultBctSrc;
+    });
+
+    // Preset positions
+    document.querySelectorAll('.btn-preset-pos').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.btn-preset-pos').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const posKey = btn.dataset.pos;
+        let posX = 0.88, posY = 0.12;
+        switch (posKey) {
+          case 'top_left': posX = 0.12; posY = 0.12; break;
+          case 'top_right': posX = 0.88; posY = 0.12; break;
+          case 'center': posX = 0.50; posY = 0.50; break;
+          case 'bottom_left': posX = 0.12; posY = 0.88; break;
+          case 'bottom_right': posX = 0.88; posY = 0.88; break;
+        }
+        this.visualizer.config.logoOverlay.posX = posX;
+        this.visualizer.config.logoOverlay.posY = posY;
+
+        const xSlider = document.getElementById('logoPosXSlider');
+        const ySlider = document.getElementById('logoPosYSlider');
+        const xBadge = document.getElementById('logoPosXBadge');
+        const yBadge = document.getElementById('logoPosYBadge');
+        if (xSlider) xSlider.value = Math.round(posX * 100);
+        if (ySlider) ySlider.value = Math.round(posY * 100);
+        if (xBadge) xBadge.innerText = `${Math.round(posX * 100)}%`;
+        if (yBadge) yBadge.innerText = `${Math.round(posY * 100)}%`;
+      });
+    });
+
+    // Sliders
+    bindInput('logoPosXSlider', val => {
+      const pct = parseFloat(val);
+      this.visualizer.config.logoOverlay.posX = pct / 100;
+      const b = document.getElementById('logoPosXBadge');
+      if (b) b.innerText = `${val}%`;
+    });
+
+    bindInput('logoPosYSlider', val => {
+      const pct = parseFloat(val);
+      this.visualizer.config.logoOverlay.posY = pct / 100;
+      const b = document.getElementById('logoPosYBadge');
+      if (b) b.innerText = `${val}%`;
+    });
+
+    bindInput('logoSizeSlider', val => {
+      const num = parseInt(val, 10);
+      this.visualizer.config.logoOverlay.size = num;
+      const b = document.getElementById('logoSizeBadge');
+      if (b) b.innerText = `${num}px`;
+    });
+
+    bindInput('logoOpacitySlider', val => {
+      const num = parseInt(val, 10);
+      this.visualizer.config.logoOverlay.opacity = num / 100;
+      const b = document.getElementById('logoOpacityBadge');
+      if (b) b.innerText = `${num}%`;
+    });
+
+    bindInput('logoShapeSelect', val => {
+      this.visualizer.config.logoOverlay.shape = val;
+    });
+
+    bindInput('logoGlowColor', val => {
+      this.visualizer.config.logoOverlay.glowColor = val;
+    });
+
+    // Real-time canvas drag sync callback
+    this.visualizer.onLogoPositionChange = (posX, posY) => {
+      const xPct = Math.round(posX * 100);
+      const yPct = Math.round(posY * 100);
+      const xSlider = document.getElementById('logoPosXSlider');
+      const ySlider = document.getElementById('logoPosYSlider');
+      const xBadge = document.getElementById('logoPosXBadge');
+      const yBadge = document.getElementById('logoPosYBadge');
+
+      if (xSlider) xSlider.value = xPct;
+      if (ySlider) ySlider.value = yPct;
+      if (xBadge) xBadge.innerText = `${xPct}%`;
+      if (yBadge) yBadge.innerText = `${yPct}%`;
+    };
+  }
+
   syncControlsWithConfig() {
     const cfg = this.visualizer.config;
     const setVal = (id, val) => {
@@ -856,6 +982,40 @@ class AppController {
       setVal('overlayPosition', cfg.tracklistOverlay.enabled ? cfg.tracklistOverlay.position : 'none');
       setVal('overlayFontSize', cfg.tracklistOverlay.fontSize);
       setVal('overlayHighlightColor', cfg.tracklistOverlay.highlightColor);
+    }
+
+    if (cfg.logoOverlay) {
+      const logoToggle = document.getElementById('logoOverlayToggle');
+      if (logoToggle) logoToggle.checked = cfg.logoOverlay.enabled;
+      
+      const logoBody = document.getElementById('logoControlsBody');
+      if (logoBody) {
+        logoBody.style.opacity = cfg.logoOverlay.enabled ? '1' : '0.4';
+        logoBody.style.pointerEvents = cfg.logoOverlay.enabled ? 'auto' : 'none';
+      }
+
+      const xVal = Math.round((cfg.logoOverlay.posX !== undefined ? cfg.logoOverlay.posX : 0.88) * 100);
+      setVal('logoPosXSlider', xVal);
+      const xB = document.getElementById('logoPosXBadge');
+      if (xB) xB.innerText = `${xVal}%`;
+
+      const yVal = Math.round((cfg.logoOverlay.posY !== undefined ? cfg.logoOverlay.posY : 0.12) * 100);
+      setVal('logoPosYSlider', yVal);
+      const yB = document.getElementById('logoPosYBadge');
+      if (yB) yB.innerText = `${yVal}%`;
+
+      const sizeVal = cfg.logoOverlay.size || 110;
+      setVal('logoSizeSlider', sizeVal);
+      const sB = document.getElementById('logoSizeBadge');
+      if (sB) sB.innerText = `${sizeVal}px`;
+
+      const opVal = Math.round((cfg.logoOverlay.opacity !== undefined ? cfg.logoOverlay.opacity : 0.9) * 100);
+      setVal('logoOpacitySlider', opVal);
+      const opB = document.getElementById('logoOpacityBadge');
+      if (opB) opB.innerText = `${opVal}%`;
+
+      setVal('logoShapeSelect', cfg.logoOverlay.shape || 'rounded_glow');
+      setVal('logoGlowColor', cfg.logoOverlay.glowColor || '#f59e0b');
     }
   }
 
