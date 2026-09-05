@@ -12,6 +12,8 @@ const I18N = {
     tabTypography: '✍️ អក្សរ & Typography',
     tabVisualizer: '⚡ Visualizer & ថាស',
     tabBackground: '🌌 ផ្ទៃខាងក្រោយ',
+    btnQrDonate: '📱 Scan QR',
+    btnCoffee: '☕ ឧបត្ថម្ភកាហ្វេ',
     btnExport: '🎬 ទាញយក Video',
     btnPlayAll: '▶️ ចាក់ចម្រៀងទាំងអស់',
     dropzoneTitle: 'ទម្លាក់ File ចម្រៀង (MP3, WAV, OGG) នៅទីនេះ',
@@ -34,6 +36,8 @@ const I18N = {
     tabTypography: '✍️ Text & Typography',
     tabVisualizer: '⚡ Visualizer & Disc',
     tabBackground: '🌌 Background & FX',
+    btnQrDonate: '📱 Scan QR',
+    btnCoffee: '☕ Buy me a coffee',
     btnExport: '🎬 Export Video',
     btnPlayAll: '▶️ Play Full Album',
     dropzoneTitle: 'Drag & Drop Audio Files (MP3, WAV, OGG) Here',
@@ -626,6 +630,18 @@ class AppController {
       this.renderPresetsGrid();
     });
 
+    const coffeeBtn = document.getElementById('buyMeCoffeeBtn');
+    if (coffeeBtn) {
+      coffeeBtn.addEventListener('click', (e) => {
+        // If the BMC floating widget exists, we can trigger it or let the direct link open
+        const bmcWidgetBtn = document.getElementById('bmc-wbtn');
+        if (bmcWidgetBtn) {
+          e.preventDefault();
+          bmcWidgetBtn.click();
+        }
+      });
+    }
+
     document.getElementById('openExportModalBtn')?.addEventListener('click', () => {
       document.getElementById('exportModal')?.classList.add('open');
     });
@@ -642,6 +658,46 @@ class AppController {
       this.exporter.cancelExport();
       document.getElementById('exportProgressBox')?.classList.remove('active');
     });
+
+    // QR Donate Modal Handlers
+    const qrModal = document.getElementById('qrDonateModal');
+    document.getElementById('openQrModalBtn')?.addEventListener('click', () => {
+      qrModal?.classList.add('open');
+    });
+
+    document.getElementById('openSupportFromSidebarBtn')?.addEventListener('click', () => {
+      qrModal?.classList.add('open');
+    });
+
+    document.getElementById('closeQrModalBtn')?.addEventListener('click', () => {
+      qrModal?.classList.remove('open');
+    });
+
+    if (qrModal) {
+      qrModal.addEventListener('click', (e) => {
+        if (e.target === qrModal) qrModal.classList.remove('open');
+      });
+
+      // Tab switching within QR Modal
+      const tabKhqrBtn = document.getElementById('tabKhqrBtn');
+      const tabBmcBtn = document.getElementById('tabBmcBtn');
+      const khqrContent = document.getElementById('khqrContent');
+      const bmcContent = document.getElementById('bmcContent');
+
+      tabKhqrBtn?.addEventListener('click', () => {
+        tabKhqrBtn.classList.add('active');
+        tabBmcBtn?.classList.remove('active');
+        khqrContent?.classList.add('active');
+        bmcContent?.classList.remove('active');
+      });
+
+      tabBmcBtn?.addEventListener('click', () => {
+        tabBmcBtn.classList.add('active');
+        tabKhqrBtn?.classList.remove('active');
+        bmcContent?.classList.add('active');
+        khqrContent?.classList.remove('active');
+      });
+    }
 
     document.getElementById('closeEditModalBtn')?.addEventListener('click', () => {
       document.getElementById('editTrackModal')?.classList.remove('open');

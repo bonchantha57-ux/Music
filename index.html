@@ -53,6 +53,30 @@
 
     <!-- Header Actions -->
     <div class="header-actions">
+      <!-- QR Scan Donate Button -->
+      <button class="btn-qr-donate" id="openQrModalBtn" title="Scan QR ដើម្បីឧបត្ថម្ភ (KHQR / Bakong / ABA)">
+        <span class="qr-glow-icon">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm13-2h3v2h-3v-2zm-3 2h2v2h-2v-2zm3 3h3v3h-3v-3zm-3 2h2v2h-2v-2zm-2-5h2v2h-2v-2zm0 4h2v3h-2v-3z"/>
+          </svg>
+        </span>
+        <span class="qr-btn-text" data-i18n="btnQrDonate">📱 Scan QR</span>
+      </button>
+
+      <!-- Buy Me a Coffee Button -->
+      <a href="https://www.buymeacoffee.com/bornchantha" target="_blank" rel="noopener noreferrer" class="btn-coffee-donate" id="buyMeCoffeeBtn" title="ឧបត្ថម្ភកាហ្វេ (Buy Me a Coffee)">
+        <span class="coffee-cup-icon">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"/>
+          </svg>
+          <span class="steam-wrap">
+            <span class="steam s1"></span>
+            <span class="steam s2"></span>
+          </span>
+        </span>
+        <span class="coffee-btn-text" data-i18n="btnCoffee">☕ ឧបត្ថម្ភកាហ្វេ</span>
+      </a>
+
       <!-- Language Toggle -->
       <button class="btn-icon-square" id="langToggleBtn" title="ប្តូរភាសា (Switch Language)">
         🇰🇭 ខ្មែរ
@@ -128,6 +152,20 @@
             <!-- Presets Grid -->
             <div class="presets-grid" id="presetsGrid">
               <!-- Dynamically populated -->
+            </div>
+
+            <!-- Mini Support Creator Banner -->
+            <div class="sidebar-support-card" id="sidebarSupportCard">
+              <div class="support-card-left">
+                <span class="support-heart-icon">💖</span>
+                <div class="support-card-texts">
+                  <div class="support-card-title">ឧបត្ថម្ភអ្នកបង្កើតកម្មវិធី</div>
+                  <div class="support-card-desc">KHQR • Bakong • Buy Me a Coffee</div>
+                </div>
+              </div>
+              <button class="btn-support-mini" id="openSupportFromSidebarBtn">
+                <span>Scan QR</span>
+              </button>
             </div>
           </div>
         </div>
@@ -824,6 +862,117 @@
       </div>
     </div>
   </div>
+
+  <!-- QR Code & Coffee Support Modal -->
+  <div class="modal-backdrop" id="qrDonateModal">
+    <div class="modal-dialog qr-modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>💖 ឧបត្ថម្ភការអភិវឌ្ឍន៍ (Support Development)</span>
+        </div>
+        <button class="btn-icon-square" id="closeQrModalBtn">✕</button>
+      </div>
+      <div class="modal-body qr-modal-body">
+        
+        <!-- Tabs within Modal: KHQR / BuyMeACoffee -->
+        <div class="qr-modal-tabs">
+          <button class="qr-tab-btn active" id="tabKhqrBtn" data-target="khqrContent">
+            <span class="qr-tab-flag">🇰🇭</span>
+            <span>KHQR / Bakong / ABA</span>
+          </button>
+          <button class="qr-tab-btn" id="tabBmcBtn" data-target="bmcContent">
+            <span class="qr-tab-flag">☕</span>
+            <span>Buy Me a Coffee</span>
+          </button>
+        </div>
+
+        <!-- KHQR Content Panel -->
+        <div class="qr-content-panel active" id="khqrContent">
+          <div class="khqr-card">
+            <div class="khqr-badge-header">
+              <span class="khqr-logo-tag">KHQR</span>
+              <span class="khqr-sub-tag">ស្កេនទូទាត់ជាមួយគ្រប់ App ធនាគារ</span>
+            </div>
+            
+            <div class="qr-image-wrapper">
+              <!-- Animated Cyber Scanning Laser -->
+              <div class="qr-scan-laser"></div>
+              
+              <!-- QR Image -->
+              <img src="assets/qr_donate.png" alt="KHQR Payment" class="qr-code-main-img" id="qrCodeImg" />
+              
+              <!-- Corner brackets decoration -->
+              <div class="corner-bracket top-left"></div>
+              <div class="corner-bracket top-right"></div>
+              <div class="corner-bracket bottom-left"></div>
+              <div class="corner-bracket bottom-right"></div>
+            </div>
+
+            <div class="qr-account-info">
+              <div class="account-name-badge">
+                <span class="dot-online"></span>
+                <span class="acc-name">BORN CHANTHA</span>
+              </div>
+              <p class="acc-guide">គាំទ្រគ្រប់ធនាគារក្នុងស្រុក (ABA, Bakong, Canadia, ACLEDA, Wing, Sathapana...)</p>
+            </div>
+
+            <div class="qr-action-buttons">
+              <a href="assets/qr_donate.png" download="BCT_Music_KHQR.png" class="btn-qr-action download-qr">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                </svg>
+                <span>📥 ទាញយករូប QR (Download Image)</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buy Me a Coffee Content Panel -->
+        <div class="qr-content-panel" id="bmcContent">
+          <div class="bmc-modal-card">
+            <div class="bmc-hero-header">
+              <div class="bmc-cup-big">☕</div>
+              <div class="bmc-hero-texts">
+                <h3>Buy Me a Coffee</h3>
+                <p>Support via International Credit/Debit Cards, Apple Pay or Google Pay</p>
+              </div>
+            </div>
+
+            <div class="bmc-perks-list">
+              <div class="bmc-perk-item">
+                <span class="perk-icon">⚡</span>
+                <span>ជួយគាំទ្រដល់ការ Upgrade Feature ថ្មីៗ និង Presets 110+</span>
+              </div>
+              <div class="bmc-perk-item">
+                <span class="perk-icon">🎵</span>
+                <span>លើកទឹកចិត្តអ្នកបង្កើតដើម្បីអភិវឌ្ឍន៍ Video Generator ឱ្យកាន់តែឡូយ</span>
+              </div>
+            </div>
+
+            <div class="bmc-direct-link-wrap">
+              <a href="https://www.buymeacoffee.com/bornchantha" target="_blank" rel="noopener noreferrer" class="btn-bmc-large">
+                <span>☕ ទៅកាន់ទំព័រ buymeacoffee.com/bornchantha</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer" style="justify-content: center;">
+        <span style="font-size: 0.82rem; color: #a5b4fc; display: flex; align-items: center; gap: 6px;">
+          ❤️ សូមអរគុណយ៉ាងជ្រាលជ្រៅចំពោះរាល់ការឧបត្ថម្ភ និងគាំទ្រ!
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Buy Me a Coffee Official Widget -->
+  <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="bornchantha" data-description="Support me on Buy me a coffee!" data-message="" data-color="#FFDD00" data-position="Right" data-x_margin="18" data-y_margin="85"></script>
 
   <!-- Application Scripts -->
   <script src="js/demoData.js"></script>

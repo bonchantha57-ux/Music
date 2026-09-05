@@ -270,6 +270,611 @@ body {
 }
 
 /* ==========================================================================
+   QR CODE SCAN DONATE BUTTON & MODAL
+   ========================================================================== */
+.btn-qr-donate {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, #e11d48 0%, #be123c 50%, #881337 100%);
+  color: #ffffff !important;
+  font-family: var(--font-main);
+  font-size: 0.88rem;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4), 0 0 20px rgba(225, 29, 72, 0.25);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.btn-qr-donate::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -70%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: rotate(25deg);
+  animation: qr-shimmer 3.2s infinite;
+  pointer-events: none;
+}
+
+@keyframes qr-shimmer {
+  0% { left: -70%; }
+  30%, 100% { left: 140%; }
+}
+
+.btn-qr-donate:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(225, 29, 72, 0.7), 0 0 35px rgba(225, 29, 72, 0.5);
+  border-color: rgba(255, 255, 255, 0.85);
+}
+
+.btn-qr-donate:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.qr-glow-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.6));
+}
+
+.qr-btn-text {
+  font-family: var(--font-khmer);
+  white-space: nowrap;
+}
+
+/* 2. QR Modal Styles */
+.qr-modal-dialog {
+  max-width: 480px;
+  background: #0b0f19;
+  border: 1px solid rgba(225, 29, 72, 0.3);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 50px rgba(225, 29, 72, 0.25);
+}
+
+.qr-modal-tabs {
+  display: flex;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 4px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-glass);
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.qr-tab-btn {
+  flex: 1;
+  padding: 8px 14px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: var(--transition-fast);
+}
+
+.qr-tab-btn:hover {
+  color: var(--text-primary);
+}
+
+.qr-tab-btn.active {
+  background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
+  color: #ffffff;
+  box-shadow: 0 2px 10px rgba(225, 29, 72, 0.4);
+}
+
+.qr-tab-btn#tabBmcBtn.active {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff;
+  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.4);
+}
+
+.qr-content-panel {
+  display: none;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.qr-content-panel.active {
+  display: block;
+}
+
+/* 3. KHQR Card & Laser Scan Effect */
+.khqr-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  padding: 4px 0;
+}
+
+.khqr-badge-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.khqr-logo-tag {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: 1.15rem;
+  letter-spacing: 0.14em;
+  background: linear-gradient(135deg, #ff1744 0%, #d50000 100%);
+  color: #ffffff;
+  padding: 3px 18px;
+  border-radius: 6px;
+  box-shadow: 0 2px 12px rgba(213, 0, 0, 0.5);
+}
+
+.khqr-sub-tag {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.qr-image-wrapper {
+  position: relative;
+  width: 250px;
+  height: 250px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 30px rgba(225, 29, 72, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.qr-code-main-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 10px;
+  display: block;
+}
+
+/* Animated Cyber Scanning Laser Line */
+.qr-scan-laser {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #e11d48, #ff4d6d, #e11d48, transparent);
+  box-shadow: 0 0 12px #ff1744, 0 0 24px #ff4d6d;
+  z-index: 10;
+  pointer-events: none;
+  animation: laserScan 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes laserScan {
+  0% { top: 8%; opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { top: 92%; opacity: 0.4; }
+}
+
+/* Corner brackets */
+.corner-bracket {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-color: #e11d48;
+  border-style: solid;
+  pointer-events: none;
+  z-index: 11;
+}
+
+.corner-bracket.top-left {
+  top: 6px;
+  left: 6px;
+  border-width: 3px 0 0 3px;
+  border-top-left-radius: 6px;
+}
+
+.corner-bracket.top-right {
+  top: 6px;
+  right: 6px;
+  border-width: 3px 3px 0 0;
+  border-top-right-radius: 6px;
+}
+
+.corner-bracket.bottom-left {
+  bottom: 6px;
+  left: 6px;
+  border-width: 0 0 3px 3px;
+  border-bottom-left-radius: 6px;
+}
+
+.corner-bracket.bottom-right {
+  bottom: 6px;
+  right: 6px;
+  border-width: 0 3px 3px 0;
+  border-bottom-right-radius: 6px;
+}
+
+.qr-account-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.account-name-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 16px;
+  background: rgba(225, 29, 72, 0.15);
+  border: 1px solid rgba(225, 29, 72, 0.4);
+  border-radius: var(--radius-full);
+}
+
+.dot-online {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.acc-name {
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  color: #f8fafc;
+}
+
+.acc-guide {
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  max-width: 360px;
+}
+
+.qr-action-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn-qr-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 22px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, rgba(225, 29, 72, 0.25), rgba(99, 102, 241, 0.25));
+  border: 1px solid rgba(225, 29, 72, 0.45);
+  color: #f8fafc;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.btn-qr-action:hover {
+  background: linear-gradient(135deg, #e11d48, #9333ea);
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 18px rgba(225, 29, 72, 0.45);
+  transform: translateY(-2px);
+}
+
+/* 4. BMC Modal Card */
+.bmc-modal-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px 0;
+}
+
+.bmc-hero-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  padding: 16px;
+  border-radius: var(--radius-lg);
+}
+
+.bmc-cup-big {
+  font-size: 2.2rem;
+  background: rgba(245, 158, 11, 0.2);
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+  flex-shrink: 0;
+}
+
+.bmc-hero-texts h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fbbf24;
+  margin-bottom: 2px;
+}
+
+.bmc-hero-texts p {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.bmc-perks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bmc-perk-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-glass);
+}
+
+.bmc-perk-item .perk-icon {
+  font-size: 1.1rem;
+}
+
+.btn-bmc-large {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, #FFDD00 0%, #F59E0B 50%, #FF5F5F 100%);
+  color: #1a0e00 !important;
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-decoration: none;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn-bmc-large:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 30px rgba(245, 158, 11, 0.6);
+  color: #000000 !important;
+}
+
+/* 5. Sidebar Mini Support Card */
+.sidebar-support-card {
+  margin-top: 14px;
+  background: linear-gradient(135deg, rgba(225, 29, 72, 0.12) 0%, rgba(99, 102, 241, 0.12) 100%);
+  border: 1px solid rgba(225, 29, 72, 0.3);
+  border-radius: var(--radius-lg);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: var(--transition-fast);
+}
+
+.sidebar-support-card:hover {
+  border-color: rgba(225, 29, 72, 0.5);
+  box-shadow: 0 6px 20px rgba(225, 29, 72, 0.2);
+}
+
+.support-card-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.support-heart-icon {
+  font-size: 1.3rem;
+  animation: pulse-heart 2s infinite alternate;
+}
+
+@keyframes pulse-heart {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.15); }
+}
+
+.support-card-texts {
+  display: flex;
+  flex-direction: column;
+}
+
+.support-card-title {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.support-card-desc {
+  font-size: 0.7rem;
+  color: #a5b4fc;
+}
+
+.btn-support-mini {
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(225, 29, 72, 0.4);
+  transition: var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn-support-mini:hover {
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.6);
+}
+
+/* ==========================================================================
+   BUY ME A COFFEE (BMC) CUSTOM BUTTON & ANIMATIONS
+   ========================================================================== */
+.btn-coffee-donate {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, #FFDD00 0%, #F59E0B 50%, #FF5F5F 100%);
+  color: #1a0e00 !important;
+  font-family: var(--font-main);
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.4), 0 0 20px rgba(255, 221, 0, 0.25);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.btn-coffee-donate::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -70%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: rotate(25deg);
+  animation: coffee-shimmer 3.5s infinite;
+  pointer-events: none;
+}
+
+@keyframes coffee-shimmer {
+  0% { left: -70%; }
+  35%, 100% { left: 140%; }
+}
+
+.btn-coffee-donate:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.65), 0 0 35px rgba(255, 221, 0, 0.55);
+  color: #000000 !important;
+  border-color: rgba(255, 255, 255, 0.85);
+}
+
+.btn-coffee-donate:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.coffee-cup-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: #1a0e00;
+}
+
+.coffee-cup-icon svg {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.25));
+  transition: transform 0.3s ease;
+}
+
+.btn-coffee-donate:hover .coffee-cup-icon svg {
+  transform: rotate(-10deg) scale(1.15);
+}
+
+.steam-wrap {
+  position: absolute;
+  top: -5px;
+  left: 4px;
+  display: flex;
+  gap: 3px;
+  pointer-events: none;
+}
+
+.steam {
+  width: 2px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 2px;
+  animation: steam-float 1.8s infinite ease-out;
+}
+
+.steam.s2 {
+  height: 8px;
+  animation-delay: 0.6s;
+}
+
+@keyframes steam-float {
+  0% {
+    opacity: 0;
+    transform: translateY(2px) scaleX(1);
+  }
+  40% {
+    opacity: 0.95;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-7px) scaleX(1.6) rotate(12deg);
+  }
+}
+
+.coffee-btn-text {
+  font-family: var(--font-khmer);
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+/* BMC Floating Widget Layering & Positioning Fix */
+#bmc-wbtn, iframe[id*="bmc"], div[id*="bmc"] {
+  z-index: 99999 !important;
+}
+
+@media (max-width: 980px) {
+  .coffee-btn-text, .qr-btn-text {
+    font-size: 0.8rem;
+  }
+  .btn-coffee-donate, .btn-qr-donate {
+    padding: 7px 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .coffee-btn-text, .qr-btn-text {
+    display: none;
+  }
+  .btn-coffee-donate, .btn-qr-donate {
+    padding: 8px;
+    border-radius: var(--radius-md);
+  }
+}
+
+/* ==========================================================================
    MAIN WORKSPACE LAYOUT
    ========================================================================== */
 .app-workspace {
