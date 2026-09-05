@@ -630,18 +630,6 @@ class AppController {
       this.renderPresetsGrid();
     });
 
-    const coffeeBtn = document.getElementById('buyMeCoffeeBtn');
-    if (coffeeBtn) {
-      coffeeBtn.addEventListener('click', (e) => {
-        // If the BMC floating widget exists, we can trigger it or let the direct link open
-        const bmcWidgetBtn = document.getElementById('bmc-wbtn');
-        if (bmcWidgetBtn) {
-          e.preventDefault();
-          bmcWidgetBtn.click();
-        }
-      });
-    }
-
     document.getElementById('openExportModalBtn')?.addEventListener('click', () => {
       document.getElementById('exportModal')?.classList.add('open');
     });
@@ -659,14 +647,26 @@ class AppController {
       document.getElementById('exportProgressBox')?.classList.remove('active');
     });
 
-    // QR Donate Modal Handlers
+    // QR & Coffee Support Modal Handlers
     const qrModal = document.getElementById('qrDonateModal');
+
+    const coffeeBtn = document.getElementById('buyMeCoffeeBtn');
+    if (coffeeBtn) {
+      coffeeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        qrModal?.classList.add('open');
+        document.getElementById('tabBmcBtn')?.click();
+      });
+    }
+
     document.getElementById('openQrModalBtn')?.addEventListener('click', () => {
       qrModal?.classList.add('open');
+      document.getElementById('tabKhqrBtn')?.click();
     });
 
     document.getElementById('openSupportFromSidebarBtn')?.addEventListener('click', () => {
       qrModal?.classList.add('open');
+      document.getElementById('tabKhqrBtn')?.click();
     });
 
     document.getElementById('closeQrModalBtn')?.addEventListener('click', () => {

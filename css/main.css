@@ -619,26 +619,42 @@ body {
   color: var(--text-secondary);
 }
 
-.bmc-perks-list {
+.bmc-amounts-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.bmc-amount-chip {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-}
-
-.bmc-perk-item {
-  display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 0.82rem;
-  color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.03);
-  padding: 10px 14px;
+  justify-content: center;
+  gap: 4px;
+  padding: 12px 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(245, 158, 11, 0.3);
   border-radius: var(--radius-md);
-  border: 1px solid var(--border-glass);
+  text-decoration: none;
+  transition: all 0.25s ease;
+  cursor: pointer;
 }
 
-.bmc-perk-item .perk-icon {
-  font-size: 1.1rem;
+.bmc-amount-chip:hover {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: #fbbf24;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.25);
+}
+
+.chip-coffee {
+  font-size: 1.2rem;
+}
+
+.chip-val {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fbbf24;
 }
 
 .btn-bmc-large {
