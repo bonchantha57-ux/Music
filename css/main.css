@@ -623,38 +623,48 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
+  margin: 4px 0;
 }
 
-.bmc-amount-chip {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 12px 8px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(245, 158, 11, 0.3);
-  border-radius: var(--radius-md);
-  text-decoration: none;
-  transition: all 0.25s ease;
-  cursor: pointer;
+.bmc-amount-chip, a.bmc-amount-chip {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  padding: 12px 6px !important;
+  background: rgba(245, 158, 11, 0.08) !important;
+  border: 1px solid rgba(245, 158, 11, 0.35) !important;
+  border-radius: var(--radius-md) !important;
+  text-decoration: none !important;
+  color: #ffffff !important;
+  transition: all 0.25s ease !important;
+  cursor: pointer !important;
 }
 
-.bmc-amount-chip:hover {
-  background: rgba(245, 158, 11, 0.15);
-  border-color: #fbbf24;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.25);
+.bmc-amount-chip:hover, a.bmc-amount-chip:hover {
+  background: rgba(245, 158, 11, 0.22) !important;
+  border-color: #fbbf24 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 18px rgba(245, 158, 11, 0.35) !important;
+  color: #ffffff !important;
 }
 
 .chip-coffee {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
+  line-height: 1;
 }
 
 .chip-val {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #fbbf24;
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #fbbf24 !important;
+  letter-spacing: 0.02em;
+}
+
+.chip-desc {
+  font-size: 0.68rem;
+  color: #94a3b8 !important;
 }
 
 .btn-bmc-large {
